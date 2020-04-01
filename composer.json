@@ -1,0 +1,12 @@
+{
+    "name": "supportpal/demo",
+    "require": {},
+    "config": {
+        "prepend-autoloader": false
+    },
+    "authors": [
+        {
+            "name": "SupportPal Limited"
+        }
+    ]
+}
