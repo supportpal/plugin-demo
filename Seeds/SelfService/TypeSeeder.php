@@ -33,7 +33,7 @@ class TypeSeeder extends Seeder
                 'description'       => 'View our manual on setting up and using our software.',
                 'enabled'           => 1,
                 'view'              => 1,
-                'icon'              => file_get_contents(base_path(DefaultTypeIcons::getIcon(1)['location'])),
+                'icon'              => 'fa-book',
                 'show_on_dashboard' => 0,
                 'created_at'        => time(),
                 'updated_at'        => time()
