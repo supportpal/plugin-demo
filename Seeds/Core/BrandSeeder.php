@@ -67,7 +67,7 @@ class BrandSeeder extends Seeder
             'enabled' => 1,
             'system_url' => $brandUrl,
             'brand_colour' => '#E74C3C',
-            'frontend_logo' => 'https://www.supportpal.com/assets/img/acmesoftware.png',
+            'frontend_logo' => 'https://www.supportpal.com/assets/img/acmesoftware_white.png',
             'frontend_template'  => 'demo',
             'default_email' => 'brand-demo@demo.com',
             'global_email_header' => '',
