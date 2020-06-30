@@ -20,7 +20,7 @@ class UserObserver
      * @param  User $model
      * @return void
      */
-    public function saving($model)
+    public function saving(User $model)
     {
         try {
             $user = User::findOrFail($model->id);
@@ -37,13 +37,27 @@ class UserObserver
     }
 
     /**
+     * Handle the User "deleting" event.
+     *
+     * @param  User  $user
+     * @return bool|void
+     */
+    public function deleting(User $user)
+    {
+        // Prevent deleting specific accounts.
+        if (in_array($user->email, $this->protectedAccounts())) {
+            return false;
+        }
+    }
+
+    /**
      * Prevent changing these attributes on protected accounts.
      *
      * @return array
      */
     protected function protectedAttributes()
     {
-        return ['email', 'password'];
+        return ['email', 'password', 'active', 'twofa_enabled'];
     }
 
     /**

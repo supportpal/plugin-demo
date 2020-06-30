@@ -5,6 +5,7 @@
 namespace App\Plugins\Demo\Controllers;
 
 use App\Modules\Core\Controllers\Plugins\Plugin;
+use App\Modules\User\Models\User;
 use App\Plugins\Demo\Events\Observers\UserObserver;
 use App\Plugins\Demo\Middleware\GeneralSettings;
 
@@ -31,7 +32,7 @@ class Demo extends Plugin
 
         $this->setLoginCredentials();
         $this->setDemoNotice();
-        \App\Modules\User\Models\User::observe(UserObserver::class);
+        User::observe(UserObserver::class);
 
         $this->addMiddlewareToRoute('core.operator.generalsetting.update', GeneralSettings::class);
     }
