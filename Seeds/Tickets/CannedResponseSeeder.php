@@ -26,7 +26,8 @@ class CannedResponseSeeder extends Seeder
         DB::table('canned_response')->insert([
             [
                 'name'       => 'Patch',
-                'text'       => '<strong>Steps to apply the patch:</strong><ol><li>Take a backup of your existing installation files</li><li>Extract the attached zip and upload it to the root of your installation</li><li>Verify functionality is as intended otherwise revert to the backup from step 1 and report back.</li></ol>',
+                'text'       => $text = '<strong>Steps to apply the patch:</strong><ol><li>Take a backup of your existing installation files</li><li>Extract the attached zip and upload it to the root of your installation</li><li>Verify functionality is as intended otherwise revert to the backup from step 1 and report back.</li></ol>',
+                'purified_text' => $text,
                 'hash'       => 'jMdUUscGQB',
                 'user_id'    => null,
                 'all_groups' => 1,
@@ -35,7 +36,8 @@ class CannedResponseSeeder extends Seeder
             ],
             [
                 'name'       => 'Replicated bug',
-                'text'       => 'Hi {{ user.firstname }},<br><br> Thanks for reporting this, We have managed to replicate the error and can confirm it as a bug.<br><br>We\'ll look into it and get it fixed for the next release.',
+                'text'       => $text = 'Hi {{ user.firstname }},<br><br> Thanks for reporting this, We have managed to replicate the error and can confirm it as a bug.<br><br>We\'ll look into it and get it fixed for the next release.',
+                'purified_text' => $text,
                 'hash'       => 'yWRfwOKhAJ',
                 'user_id'    => null,
                 'all_groups' => 1,
@@ -44,7 +46,8 @@ class CannedResponseSeeder extends Seeder
             ],
             [
                 'name'       => 'More details please',
-                'text'       => 'Hi {{ user.firstname }},<br><br> Thanks for contacting us. I would be happy to look in to this problem for you, would you be able to let me know the steps required to replicate the issue?',
+                'text'       => $text = 'Hi {{ user.firstname }},<br><br> Thanks for contacting us. I would be happy to look in to this problem for you, would you be able to let me know the steps required to replicate the issue?',
+                'purified_text' => $text,
                 'hash'       => 'AOSBPKbqUl',
                 'user_id'    => 1,
                 'all_groups' => 0,
