@@ -58,25 +58,33 @@ class OperatorSeeder extends Seeder
                 'user_id'       => 1,
                 'brand_id'      => null,
                 'department_id' => null,
-                'contents'      => '-----<br>Best Regards,<br><br>John Doe<br><strong>{{ brand.name }}</strong>'
+                'contents'      => '-----<br>Best Regards,<br><br>John Doe<br><strong>{{ brand.name }}</strong>',
+                'created_at'    => time(),
+                'updated_at'    => time()
             ],
             [
                 'user_id'       => 1,
                 'brand_id'      => null,
                 'department_id' => 1,
-                'contents'      => '-----<br>Best Regards,<br><br>John Doe<br><strong>{{ brand.name }}</strong><br><br>Follow us on Twitter @DemoAccount to get the latest service updates.'
+                'contents'      => '-----<br>Best Regards,<br><br>John Doe<br><strong>{{ brand.name }}</strong><br><br>Follow us on Twitter @DemoAccount to get the latest service updates.',
+                'created_at'    => time(),
+                'updated_at'    => time(),
             ],
             [
                 'user_id'       => 1,
                 'brand_id'      => 2,
                 'department_id' => null,
-                'contents'      => '-----<br>Best Regards,<br>John @ {{ brand.name }}'
+                'contents'      => '-----<br>Best Regards,<br>John @ {{ brand.name }}',
+                'created_at'    => time(),
+                'updated_at'    => time(),
             ],
             [
                 'user_id'       => 2,
                 'brand_id'      => null,
                 'department_id' => null,
-                'contents'      => '-----<br>Best Regards,<br><br>Shaun Davies<br><strong>{{ brand.name }}</strong>'
+                'contents'      => '-----<br>Best Regards,<br><br>Shaun Davies<br><strong>{{ brand.name }}</strong>',
+                'created_at'    => time(),
+                'updated_at'    => time(),
             ]
         ]);
     }
