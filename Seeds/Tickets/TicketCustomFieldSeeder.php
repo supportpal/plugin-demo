@@ -30,6 +30,7 @@ class TicketCustomFieldSeeder extends Seeder
                 'public'     => 1,
                 'encrypted'  => 0,
                 'purge'      => 0,
+                'locked'     => 0,
                 'created_at' => time(),
                 'updated_at' => time()
             ],
@@ -41,6 +42,7 @@ class TicketCustomFieldSeeder extends Seeder
                 'public'     => 1,
                 'encrypted'  => 0,
                 'purge'      => 0,
+                'locked'     => 0,
                 'created_at' => time(),
                 'updated_at' => time()
             ],
@@ -52,6 +54,7 @@ class TicketCustomFieldSeeder extends Seeder
                 'public'     => 1,
                 'encrypted'  => 1,
                 'purge'      => 1,
+                'locked'     => 0,
                 'created_at' => time(),
                 'updated_at' => time()
             ],
@@ -63,6 +66,7 @@ class TicketCustomFieldSeeder extends Seeder
                 'public'     => 1,
                 'encrypted'  => 1,
                 'purge'      => 1,
+                'locked'     => 0,
                 'created_at' => time(),
                 'updated_at' => time()
             ],
@@ -74,6 +78,7 @@ class TicketCustomFieldSeeder extends Seeder
                 'public'     => 0,
                 'encrypted'  => 0,
                 'purge'      => 0,
+                'locked'     => 0,
                 'created_at' => time(),
                 'updated_at' => time()
             ]
