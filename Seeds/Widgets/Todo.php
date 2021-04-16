@@ -26,7 +26,6 @@ class Todo extends Seeder
                 'user_id'       => 1,
                 'text'          => 'Make sure to complete new feature request #323',
                 'due'           => time() + 86400, // Tomorrow
-                'complete'      => 0,
                 'created_at'    => time(),
                 'updated_at'    => time()
             ]
