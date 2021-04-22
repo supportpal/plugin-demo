@@ -12,6 +12,7 @@ use App\Plugins\Demo\Seeds\Core\BrandSeeder;
 use App\Plugins\Demo\Seeds\Core\EmailTemplateSeeder;
 use App\Plugins\Demo\Seeds\Core\IpBanSeeder;
 use App\Plugins\Demo\Seeds\Core\IpWhitelistSeeder;
+use App\Plugins\Demo\Seeds\Core\LanguageSeeder;
 use App\Plugins\Demo\Seeds\Core\SettingSeeder;
 use App\Plugins\Demo\Seeds\Core\SpamRuleSeeder;
 use App\Plugins\Demo\Seeds\Plugins\LoginSeeder;
@@ -66,6 +67,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ApiTokenSeeder::class);
         $this->call(IpBanSeeder::class);
         $this->call(IpWhitelistSeeder::class);
+        $this->call(LanguageSeeder::class);
         $this->call(SpamRuleSeeder::class);
 
         // Seed operator widgets.
