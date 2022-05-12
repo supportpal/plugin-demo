@@ -1,18 +1,11 @@
-<?php
-/**
- * File UserSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Users;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use DB;
 use Hash;
 
-/**
- * Class UserSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Users
- */
 class UserSeeder extends Seeder
 {
     /**

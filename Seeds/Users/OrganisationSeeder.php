@@ -1,17 +1,10 @@
-<?php
-/**
- * File OrganisationSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Users;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use DB;
 
-/**
- * Class OrganisationSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Users
- */
 class OrganisationSeeder extends Seeder
 {
     /**

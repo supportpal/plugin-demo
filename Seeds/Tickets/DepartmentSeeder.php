@@ -1,17 +1,10 @@
-<?php
-/**
- * File DepartmentSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Tickets;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Tickets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use DB;
 
-/**
- * Class DepartmentSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Tickets
- */
 class DepartmentSeeder extends Seeder
 {
     /**

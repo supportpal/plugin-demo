@@ -1,54 +1,47 @@
-<?php
-/**
- * File DatabaseSeeder.php
- */
-namespace App\Plugins\Demo\Seeds;
+<?php declare(strict_types=1);
 
+namespace Addons\Plugins\Demo\Seeds;
+
+use Addons\Plugins\Demo\Controllers\Demo;
+use Addons\Plugins\Demo\Seeds\Core\ApiTokenSeeder;
+use Addons\Plugins\Demo\Seeds\Core\BrandSeeder;
+use Addons\Plugins\Demo\Seeds\Core\EmailTemplateSeeder;
+use Addons\Plugins\Demo\Seeds\Core\IpBanSeeder;
+use Addons\Plugins\Demo\Seeds\Core\IpWhitelistSeeder;
+use Addons\Plugins\Demo\Seeds\Core\LanguageSeeder;
+use Addons\Plugins\Demo\Seeds\Core\SettingSeeder;
+use Addons\Plugins\Demo\Seeds\Core\SpamRuleSeeder;
+use Addons\Plugins\Demo\Seeds\Plugins\LoginSeeder;
+use Addons\Plugins\Demo\Seeds\SelfService\ArticleSeeder;
+use Addons\Plugins\Demo\Seeds\SelfService\CategorySeeder;
+use Addons\Plugins\Demo\Seeds\SelfService\CommentSeeder;
+use Addons\Plugins\Demo\Seeds\SelfService\RatingSeeder;
+use Addons\Plugins\Demo\Seeds\SelfService\ArticleTagSeeder;
+use Addons\Plugins\Demo\Seeds\SelfService\TypeSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\CannedResponseSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\DepartmentSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\DepartmentEmailSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\FeedbackSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\FilterSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\HolidaySeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\MacroSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\SlaPlanSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\TicketCustomFieldSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\TicketSeeder;
+use Addons\Plugins\Demo\Seeds\Tickets\TicketTagSeeder;
+use Addons\Plugins\Demo\Seeds\Users\CustomFieldSeeder;
+use Addons\Plugins\Demo\Seeds\Users\GroupSeeder;
+use Addons\Plugins\Demo\Seeds\Users\OperatorSeeder;
+use Addons\Plugins\Demo\Seeds\Users\OrganisationSeeder;
+use Addons\Plugins\Demo\Seeds\Users\RoleSeeder;
+use Addons\Plugins\Demo\Seeds\Users\UserSeeder;
+use Addons\Plugins\Demo\Seeds\Widgets\Notes;
+use Addons\Plugins\Demo\Seeds\Widgets\Todo;
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\User\Models\Permission;
-use App\Plugins\Demo\Controllers\Demo;
-use App\Plugins\Demo\Seeds\Core\ApiTokenSeeder;
-use App\Plugins\Demo\Seeds\Core\BrandSeeder;
-use App\Plugins\Demo\Seeds\Core\EmailTemplateSeeder;
-use App\Plugins\Demo\Seeds\Core\IpBanSeeder;
-use App\Plugins\Demo\Seeds\Core\IpWhitelistSeeder;
-use App\Plugins\Demo\Seeds\Core\LanguageSeeder;
-use App\Plugins\Demo\Seeds\Core\SettingSeeder;
-use App\Plugins\Demo\Seeds\Core\SpamRuleSeeder;
-use App\Plugins\Demo\Seeds\Plugins\LoginSeeder;
-use App\Plugins\Demo\Seeds\SelfService\ArticleSeeder;
-use App\Plugins\Demo\Seeds\SelfService\CategorySeeder;
-use App\Plugins\Demo\Seeds\SelfService\CommentSeeder;
-use App\Plugins\Demo\Seeds\SelfService\RatingSeeder;
-use App\Plugins\Demo\Seeds\SelfService\ArticleTagSeeder;
-use App\Plugins\Demo\Seeds\SelfService\TypeSeeder;
-use App\Plugins\Demo\Seeds\Tickets\CannedResponseSeeder;
-use App\Plugins\Demo\Seeds\Tickets\DepartmentSeeder;
-use App\Plugins\Demo\Seeds\Tickets\DepartmentEmailSeeder;
-use App\Plugins\Demo\Seeds\Tickets\FeedbackSeeder;
-use App\Plugins\Demo\Seeds\Tickets\FilterSeeder;
-use App\Plugins\Demo\Seeds\Tickets\HolidaySeeder;
-use App\Plugins\Demo\Seeds\Tickets\MacroSeeder;
-use App\Plugins\Demo\Seeds\Tickets\SlaPlanSeeder;
-use App\Plugins\Demo\Seeds\Tickets\TicketCustomFieldSeeder;
-use App\Plugins\Demo\Seeds\Tickets\TicketSeeder;
-use App\Plugins\Demo\Seeds\Tickets\TicketTagSeeder;
-use App\Plugins\Demo\Seeds\Users\CustomFieldSeeder;
-use App\Plugins\Demo\Seeds\Users\GroupSeeder;
-use App\Plugins\Demo\Seeds\Users\OperatorSeeder;
-use App\Plugins\Demo\Seeds\Users\OrganisationSeeder;
-use App\Plugins\Demo\Seeds\Users\RoleSeeder;
-use App\Plugins\Demo\Seeds\Users\UserSeeder;
-use App\Plugins\Demo\Seeds\Widgets\Notes;
-use App\Plugins\Demo\Seeds\Widgets\Todo;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class DatabaseSeeder
- *
- * @package    App\Plugins\Demo\Seeds
- */
 class DatabaseSeeder extends Seeder
 {
     /**

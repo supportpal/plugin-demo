@@ -1,8 +1,6 @@
-<?php
-/**
- * File BrandSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Core;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Core;
 
 if (!defined('HTTP_URL_REPLACE')) {
     define('HTTP_URL_REPLACE', 1);
@@ -42,11 +40,6 @@ use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\Core\Models\Brand;
 use DB;
 
-/**
- * Class BrandSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Core
- */
 class BrandSeeder extends Seeder
 {
     /**

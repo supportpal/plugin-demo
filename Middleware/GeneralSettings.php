@@ -1,26 +1,20 @@
-<?php
-/**
- * File GeneralSettings.php
- */
-namespace App\Plugins\Demo\Middleware;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
-/**
- * Class GeneralSettings
- *
- * @package    App\Plugins\Demo\Controllers
- */
 class GeneralSettings
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
+     * @param  Request $request
+     * @param  Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         // Prevent enabling debug mode.
         $request->merge(['debug_mode' => 0]);

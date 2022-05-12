@@ -1,18 +1,11 @@
-<?php
-/**
- * File EmailTemplateSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Core;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Core;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\Core\Models\EmailTemplate;
 use DB;
 
-/**
- * Class EmailTemplateSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Core
- */
 class EmailTemplateSeeder extends Seeder
 {
     /**
