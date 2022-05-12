@@ -1,17 +1,10 @@
-<?php
-/**
- * File CommentSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\SelfService;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\SelfService;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use DB;
 
-/**
- * Class CommentSeeder
- *
- * @package    App\Plugins\Demo\Seeds\SelfService
- */
 class CommentSeeder extends Seeder
 {
     /**

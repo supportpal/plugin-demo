@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => 'Demo::lang.name',
+    'name' => 'Plugins#Demo::lang.name',
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ return [
     |
     */
 
-    'description' => 'Demo::lang.description',
+    'description' => 'Plugins#Demo::lang.description',
 
     /*
     |--------------------------------------------------------------------------

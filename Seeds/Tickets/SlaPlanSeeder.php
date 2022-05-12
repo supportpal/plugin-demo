@@ -1,17 +1,10 @@
-<?php
-/**
- * File SlaPlanSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Tickets;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Tickets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use DB;
 
-/**
- * Class SlaPlanSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Tickets
- */
 class SlaPlanSeeder extends Seeder
 {
     /**

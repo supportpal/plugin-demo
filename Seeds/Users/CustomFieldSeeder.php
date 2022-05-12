@@ -1,17 +1,10 @@
-<?php
-/**
- * File CustomFieldSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Users;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use DB;
 
-/**
- * Class CustomFieldSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Users
- */
 class CustomFieldSeeder extends Seeder
 {
     /**

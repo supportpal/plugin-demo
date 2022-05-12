@@ -1,26 +1,13 @@
-<?php
-/**
- * File UserObserver.php
- */
-namespace App\Plugins\Demo\Events\Observers;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Events\Observers;
 
 use App\Modules\User\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-/**
- * Class UserObserver
- *
- * @package App\Plugins\Demo\Events\Observers
- */
 class UserObserver
 {
-    /**
-     * Saving user model event.
-     *
-     * @param  User $model
-     * @return void
-     */
-    public function saving(User $model)
+    public function saving(User $model): void
     {
         try {
             $user = User::findOrFail($model->id);
@@ -36,26 +23,22 @@ class UserObserver
         }
     }
 
-    /**
-     * Handle the User "deleting" event.
-     *
-     * @param  User  $user
-     * @return bool|void
-     */
-    public function deleting(User $user)
+    public function deleting(User $user): ?bool
     {
         // Prevent deleting specific accounts.
         if (in_array($user->email, $this->protectedAccounts())) {
             return false;
         }
+
+        return null;
     }
 
     /**
      * Prevent changing these attributes on protected accounts.
      *
-     * @return array
+     * @return string[]
      */
-    protected function protectedAttributes()
+    protected function protectedAttributes(): array
     {
         return ['email', 'password', 'active', 'twofa_enabled'];
     }
@@ -63,9 +46,9 @@ class UserObserver
     /**
      * Prevent updating attributes on certain accounts.
      *
-     * @return array
+     * @return string[]
      */
-    protected function protectedAccounts()
+    protected function protectedAccounts(): array
     {
         return ['user@demo.com', 'operator@demo.com'];
     }

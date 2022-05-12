@@ -1,19 +1,12 @@
-<?php
-/**
- * File Demo.php
- */
-namespace App\Plugins\Demo\Controllers;
+<?php declare(strict_types=1);
 
+namespace Addons\Plugins\Demo\Controllers;
+
+use Addons\Plugins\Demo\Events\Observers\UserObserver;
+use Addons\Plugins\Demo\Middleware\GeneralSettings;
 use App\Modules\Core\Controllers\Plugins\Plugin;
 use App\Modules\User\Models\User;
-use App\Plugins\Demo\Events\Observers\UserObserver;
-use App\Plugins\Demo\Middleware\GeneralSettings;
 
-/**
- * Class Demo
- *
- * @package    App\Plugins\Demo\Controllers
- */
 class Demo extends Plugin
 {
     /**

@@ -1,19 +1,12 @@
-<?php
-/**
- * File PluginSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Core;
+<?php declare(strict_types=1);
 
+namespace Addons\Plugins\Demo\Seeds\Core;
+
+use Addons\Plugins\Demo\Controllers\Demo;
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use App\Plugins\Demo\Controllers\Demo;
 use Exception;
 use PluginFactory;
 
-/**
- * Class PluginSeeder
- *
- * @package App\Plugins\Demo\Seeds\Core
- */
 class PluginSeeder extends Seeder
 {
     /**

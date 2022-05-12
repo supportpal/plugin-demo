@@ -1,19 +1,12 @@
-<?php
-/**
- * File OperatorSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Users;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\User\Models\User;
 use DB;
 use Hash;
 
-/**
- * Class OperatorSeeder
- *
- * @package    App\Plugins\Demo\Seeds\Users
- */
 class OperatorSeeder extends Seeder
 {
     /**

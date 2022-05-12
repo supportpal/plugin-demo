@@ -1,19 +1,12 @@
-<?php
-/**
- * File LoginSeeder.php
- */
-namespace App\Plugins\Demo\Seeds\Plugins;
+<?php declare(strict_types=1);
 
+namespace Addons\Plugins\Demo\Seeds\Plugins;
+
+use Addons\Plugins\Demo\Controllers\Demo;
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use App\Plugins\Demo\Controllers\Demo;
 use Exception;
 use PluginFactory;
 
-/**
- * Class LoginSeeder
- *
- * @package App\Plugins\Demo\Seeds\Plugins
- */
 class LoginSeeder extends Seeder
 {
     /**

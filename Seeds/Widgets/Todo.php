@@ -1,17 +1,10 @@
-<?php
-/**
- * File Todo.php
- */
-namespace App\Plugins\Demo\Seeds\Widgets;
+<?php declare(strict_types=1);
+
+namespace Addons\Plugins\Demo\Seeds\Widgets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use DB;
 
-/**
- * Class Todo
- *
- * @package    App\Plugins\Demo\Seeds\Widgets
- */
 class Todo extends Seeder
 {
     /**
