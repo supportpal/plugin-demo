@@ -106,8 +106,13 @@ class DatabaseSeeder extends Seeder
         $plugin = DB::table('plugin')->where('name', Demo::IDENTIFIER)->first();
         DB::table('plugin_role')->where('plugin_id', $plugin->id)->delete();
 
-        // Allows the cron to run but prevents tasks from running.
-        DB::table('scheduled_task')->delete();
+        // Allows the cron to run but prevents some tasks from running.
+        DB::table('scheduled_task')
+            ->whereIn('class', [
+                'App\Modules\Core\Models\EmailQueue',
+                'App\Modules\Core\Controllers\Update\Manager\UpdateManager'
+            ])
+            ->delete();
 
         Model::reguard();
     }
