@@ -46,7 +46,7 @@ class OperatorSeeder extends Seeder
             'updated_at'    => time()
         ]);
 
-        DB::table('operator_signature')->insert([
+        DB::table('operator_reply_template')->insert([
             [
                 'user_id'       => 1,
                 'brand_id'      => null,
