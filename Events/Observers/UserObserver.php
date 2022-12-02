@@ -15,7 +15,7 @@ class UserObserver
             // Prevent updating protected attributes for specific accounts.
             if (in_array($user->email, $this->protectedAccounts())) {
                 foreach ($this->protectedAttributes() as $attribute) {
-                    unset($model->$attribute);
+                    $model->$attribute = $model->getOriginal($attribute);
                 }
             }
         } catch (ModelNotFoundException $e) {
