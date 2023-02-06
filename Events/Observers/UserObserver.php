@@ -9,18 +9,17 @@ class UserObserver
 {
     public function saving(User $model): void
     {
-        try {
-            $user = User::findOrFail($model->id);
-
-            // Prevent updating protected attributes for specific accounts.
-            if (in_array($user->email, $this->protectedAccounts())) {
-                foreach ($this->protectedAttributes() as $attribute) {
-                    $model->$attribute = $model->getOriginal($attribute);
-                }
-            }
-        } catch (ModelNotFoundException $e) {
-            //
+        // Prevent updating protected attributes for specific accounts.
+        if (! in_array($model->email, $this->protectedAccounts())) {
+            return;
         }
+        
+        $attributes = [];
+        foreach ($this->protectedAttributes() as $attribute) {
+            $attributes[$attribute] = $model->getOriginal($attribute);
+        }
+
+        $model->setRawAttributes(array_merge($model->getAttributes(), $attributes));
     }
 
     public function deleting(User $user): ?bool
