@@ -25,7 +25,8 @@ class ArticleSeeder extends Seeder
                 'title' => 'REST API',
                 'slug' => 'rest-api',
                 'excerpt'   => 'The REST API can be used to access data and perform actions from external applications.',
-                'text' => $text = '<p>The REST API can be used to access data and perform actions from external applications.</p>
+                'text' => $text = '<div class="sp-editor-content">
+<p>The REST API can be used to access data and perform actions from external applications.</p>
 <p>&nbsp;</p>
 <h2>Current Version</h2>
 <p>The current version of the API is <strong>v2</strong>.</p>
@@ -33,10 +34,10 @@ class ArticleSeeder extends Seeder
 <h2>Multiple Formats</h2>
 <p>The default format of API responses is XML, but JSON and YAML are also available options. The URL needs to be adjusted as in the below example of listing all departments.</p>
 <p>&nbsp;</p>
-<pre>http://mydomain.com/api/v2/Tickets/Department/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;
-http://mydomain.com/api/v2/Tickets/Department.json/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;
-http://mydomain.com/api/v2/Tickets/Department.xml/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;
-http://mydomain.com/api/v2/Tickets/Department.yaml/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;
+<pre><a href="http://mydomain.com/api/v2/Tickets/Department/?time=%3Ctime%3E%26hash%3D%3Chash%3E">http://mydomain.com/api/v2/Tickets/Department/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;</a>
+<a href="http://mydomain.com/api/v2/Tickets/Department.json/?time=%3Ctime%3E%26hash%3D%3Chash%3E">http://mydomain.com/api/v2/Tickets/Department.json/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;</a>
+<a href="http://mydomain.com/api/v2/Tickets/Department.xml/?time=%3Ctime%3E%26hash%3D%3Chash%3E">http://mydomain.com/api/v2/Tickets/Department.xml/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;</a>
+<a href="http://mydomain.com/api/v2/Tickets/Department.yaml/?time=%3Ctime%3E%26hash%3D%3Chash%3E">http://mydomain.com/api/v2/Tickets/Department.yaml/?time=&lt;time&gt;&amp;hash=&lt;hash&gt;</a>
 </pre>
 <p>&nbsp;</p>
 <h2>Authentication</h2>
@@ -47,7 +48,8 @@ http://mydomain.com/api/v2/Tickets/Department.yaml/?time=&lt;time&gt;&amp;hash=&
 <p>Time and hash are required parameters for using the API.</p>
 <p>&nbsp;</p>
 <h2>Logging</h2>
-<p>Optionally, you can also use the <strong>staff_id</strong> parameter, which refers to the ID of the operator using the API for logging purposes.</p>',
+<p>Optionally, you can also use the <strong>staff_id</strong> parameter, which refers to the ID of the operator using the API for logging purposes.</p>
+</div>',
 		        'purified_text' => $text,
 		        'plain_text' => 'The REST API can be used to access data and perform actions from external applications.
 Current Version
