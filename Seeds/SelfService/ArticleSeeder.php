@@ -77,7 +77,7 @@ Optionally, you can also use the staff_id parameter, which refers to the ID of t
                 'title' => 'SimpleAuth',
                 'slug' => 'simpleauth',
                 'excerpt'   => 'SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software.',
-                'text' => $text = '<p>SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.<br /><br />It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.<br /><br />SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.</p>
+                'text' => $text = '<div class="sp-editor-content"><p>SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.<br /><br />It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.<br /><br />SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.</p>
 <p>&nbsp;</p>
 <h2>Activate SimpleAuth</h2>
 <p>SimpleAuth can be used by setting a key like below in the config.php file found in the includes folder. A key may currently be set, but you are welcome to change it to any random string of characters and numbers.</p>
@@ -92,32 +92,32 @@ Optionally, you can also use the staff_id parameter, which refers to the ID of t
 <p>You can now use the resulting hash to build the request. To declare a redirect URL, use the \'back\' parameter. An example request is below.</p>
 <p>&nbsp;</p>
 <pre>login.php?email=test@test.com&amp;
-time=1423680791&amp;hash=bdc391437d78377767b5d435356e04eb&amp;back=<a href="http://domain.com/clientarea.php">http://domain.com/clientarea.php</a></pre>
+time=1423680791&amp;hash=bdc391437d78377767b5d435356e04eb&amp;back=http://domain.com/clientarea.php</pre>
 <p>&nbsp;</p>
 <h2>Errors</h2>
 <p>If the hash is invalid, the timestamp is outdated or no key has been set, the script will return a json string that contains details of the error.</p>
 <p>&nbsp;</p>
 <h2>Sample Code</h2>
-<pre><strong>&lt;?php</strong>
+<pre class="language-php"><code>&lt;?php
  
-<em>// Set the login URL and SimpleAuth key</em>
-    $loginUrl = \'<a href="https://www.domain.com/support/login.php">https://www.domain.com/support/login.php</a>\';
+// Set the login URL and SimpleAuth key
+$loginUrl = \'https://www.domain.com/support/login.php\';
 $simpleAuthKey = \'RhqFi31PpIe0eIyP08fNqA\';
  
-<em>// Set variables for hash</em>
-    $email = \'test@test.com\';
+// Set variables for hash
+$email = \'test@test.com\';
 $time = time();
-$back = \'<a href="http://domain.com/clientarea.php">http://domain.com/clientarea.php</a>\';
+$back = \'http://domain.com/clientarea.php\';
  
-<em>// Generate hash</em>
-    $hash = md5($email . $simpleAuthKey . $time);
+// Generate hash
+$hash = md5($email . $simpleAuthKey . $time);
  
-<em>// Generate request and access it</em>
-    $request = $loginUrl . \'?email=\' . $email . \'&amp;time=\' . $time . \'&amp;hash=\' . $hash . \'&amp;back=\' . urlencode($back);
+// Generate request and access it
+$request = $loginUrl . \'?email=\' . $email . \'&amp;time=\' . $time . \'&amp;hash=\' . $hash . \'&amp;back=\' . urlencode($back);
 header("Location: $request");
-exit;</pre>',
+exit;</code></pre></div>',
                 'purified_text' => $text,
-		        'plain_text' => 'SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.Activate SimpleAuthSimpleAuth can be used by setting a key like below in the config.php file found in the includes folder. A key may currently be set, but you are welcome to change it to any random string of characters and numbers.$SIMPLEAUTH_KEY = "RhqFi31PpIe0eIyP08fNqA";Using SimpleAuthTo use SimpleAuth, we need to generate a hash for each request. This hash is generated by combining the user\'s email address, the secret key and the current timestamp like below. The timestamp must be within 10 minutes of the server time or else the request will be invalid.md5($email . $SIMPLEAUTH_KEY . $time)You can now use the resulting hash to build the request. To declare a redirect URL, use the \'back\' parameter. An example request is below.login.php?email=test@test.com&
+		'plain_text' => 'SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.Activate SimpleAuthSimpleAuth can be used by setting a key like below in the config.php file found in the includes folder. A key may currently be set, but you are welcome to change it to any random string of characters and numbers.$SIMPLEAUTH_KEY = "RhqFi31PpIe0eIyP08fNqA";Using SimpleAuthTo use SimpleAuth, we need to generate a hash for each request. This hash is generated by combining the user\'s email address, the secret key and the current timestamp like below. The timestamp must be within 10 minutes of the server time or else the request will be invalid.md5($email . $SIMPLEAUTH_KEY . $time)You can now use the resulting hash to build the request. To declare a redirect URL, use the \'back\' parameter. An example request is below.login.php?email=test@test.com&
 time=1423680791&hash=bdc391437d78377767b5d435356e04eb&back=http://domain.com/clientarea.phpErrorsIf the hash is invalid, the timestamp is outdated or no key has been set, the script will return a json string that contains details of the error.',
                 'published' => 1,
                 'published_at' => now()->subDay()->subHour()->subMinutes(11)->getTimestamp(),
