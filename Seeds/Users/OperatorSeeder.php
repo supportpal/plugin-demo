@@ -22,7 +22,7 @@ class OperatorSeeder extends Seeder
             'lastname'      => 'Davies',
             'email'         => 'operator2@demo.com',
             'password'      => Hash::make('demo'),
-            'confirmed'     => 1,
+            'email_verified'     => 1,
             'country'       => 'GB',
             'language_code' => 'en',
             'timezone'      => 'Europe/London',
