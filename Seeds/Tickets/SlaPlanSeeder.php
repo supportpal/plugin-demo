@@ -28,25 +28,25 @@ class SlaPlanSeeder extends Seeder
             [
                 'plan_id'      => 1,
                 'priority_id'  => 1,
-                'reply_time'   => 86400,
+                'first_reply_time'   => 86400,
                 'resolve_time' => 604800
             ],
             [
                 'plan_id'      => 1,
                 'priority_id'  => 2,
-                'reply_time'   => 64800,
+                'first_reply_time'   => 64800,
                 'resolve_time' => 345600
             ],
             [
                 'plan_id'      => 1,
                 'priority_id'  => 3,
-                'reply_time'   => 43200,
+                'first_reply_time'   => 43200,
                 'resolve_time' => 172800
             ],
             [
                 'plan_id'      => 1,
                 'priority_id'  => 4,
-                'reply_time'   => 14400,
+                'first_reply_time'   => 14400,
                 'resolve_time' => 86400
             ]
         ]);
