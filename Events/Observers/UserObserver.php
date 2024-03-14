@@ -7,16 +7,21 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserObserver
 {
-    public function saving(User $model): void
+    public function updating(User $model): void
     {
-        // Prevent updating protected attributes for specific accounts.
-        if (! in_array($model->email, $this->protectedAccounts())) {
+        if (! $this->isProtectedAccount($model)) {
             return;
         }
-        
+
         $attributes = [];
         foreach ($this->protectedAttributes() as $attribute) {
-            $attributes[$attribute] = $model->getOriginal($attribute);
+            $default = 'uninitialized';
+            $original = $model->getRawOriginal($attribute, $default);
+            if ($original === $default) {
+                continue;
+            }
+
+            $attributes[$attribute] = $original;
         }
 
         $model->setRawAttributes(array_merge($model->getAttributes(), $attributes));
@@ -24,8 +29,7 @@ class UserObserver
 
     public function deleting(User $user): ?bool
     {
-        // Prevent deleting specific accounts.
-        if (in_array($user->email, $this->protectedAccounts())) {
+        if ($this-isProtectedAccount($user)) {
             return false;
         }
 
@@ -42,13 +46,11 @@ class UserObserver
         return ['email', 'password', 'active', 'twofa_enabled'];
     }
 
-    /**
-     * Prevent updating attributes on certain accounts.
-     *
-     * @return string[]
-     */
-    protected function protectedAccounts(): array
+    protected function isProtectedAccount(User $user): bool
     {
-        return ['user@demo.com', 'operator@demo.com'];
+        $email = $user->exists ? $user->getOriginal('email') : $user->email;
+
+        return ($user->role === User::ROLE_OPERATOR && $email === 'operator@demo.com')
+            || ($user->role === USER::ROLE_USER && $email === 'user@demo.com');
     }
 }
