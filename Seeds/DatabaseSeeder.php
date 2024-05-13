@@ -9,7 +9,6 @@ use Addons\Plugins\Demo\Seeds\Core\EmailTemplateSeeder;
 use Addons\Plugins\Demo\Seeds\Core\IpBanSeeder;
 use Addons\Plugins\Demo\Seeds\Core\IpWhitelistSeeder;
 use Addons\Plugins\Demo\Seeds\Core\LanguageSeeder;
-use Addons\Plugins\Demo\Seeds\Core\SettingSeeder;
 use Addons\Plugins\Demo\Seeds\Core\SpamRuleSeeder;
 use Addons\Plugins\Demo\Seeds\Plugins\LoginSeeder;
 use Addons\Plugins\Demo\Seeds\SelfService\ArticleSeeder;
@@ -54,7 +53,6 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         // Seed core content.
-        $this->call(SettingSeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(EmailTemplateSeeder::class);
         $this->call(ApiTokenSeeder::class);
