@@ -50,7 +50,7 @@ class BrandSeeder extends Seeder
     public function run()
     {
         $url = parse_url(Brand::first()->system_url);
-        $url['host'] = 'brand.' . $url['host'];
+        $url['host'] = 'brand-' . $url['host'];
 
         $brandUrl = $this->http_build_url($url);
 
