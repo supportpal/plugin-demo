@@ -29,7 +29,7 @@ class UserObserver
 
     public function deleting(User $user): ?bool
     {
-        if ($this-isProtectedAccount($user)) {
+        if ($this->isProtectedAccount($user)) {
             return false;
         }
 
