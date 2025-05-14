@@ -3,7 +3,8 @@
 namespace Addons\Plugins\Demo\Seeds\SelfService;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\Core\Models\ActivityLog\Type as ActivityLogType;
+use App\Modules\Selfservice\Models\Type;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -18,10 +19,13 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $time = now()->getTimestamp();
+        $announcements = Type::where('slug', 'announcements')->firstOrFail();
+        $knowledgebase = Type::where('slug', 'knowledgebase')->firstOrFail();
+        $documentation = Type::where('slug', 'documentation')->firstOrFail();
 
         $categories = [
             [
-                'type_id'       => 1, // Announcements
+                'type_id'       => $announcements->id,
                 'parent_id'     => null,
                 'name'          => 'Press Releases',
                 'slug'          => 'press-releases',
@@ -31,7 +35,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 1, // Announcements
+                'type_id'       => $announcements->id,
                 'parent_id'     => null,
                 'name'          => 'General',
                 'slug'          => 'general',
@@ -41,7 +45,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
+                'type_id'       => $knowledgebase->id,
                 'parent_id'     => null,
                 'name'          => 'Getting Started',
                 'slug'          => 'getting-started',
@@ -51,7 +55,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
+                'type_id'       => $knowledgebase->id,
                 'parent_id'     => null,
                 'name'          => 'Customisation',
                 'slug'          => 'customisation',
@@ -61,7 +65,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
+                'type_id'       => $knowledgebase->id,
                 'parent_id'     => null,
                 'name'          => 'API',
                 'slug'          => 'api',
@@ -71,7 +75,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
+                'type_id'       => $knowledgebase->id,
                 'parent_id'     => null,
                 'name'          => 'Plugins',
                 'slug'          => 'plugins',
@@ -81,7 +85,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 3, // Documentation
+                'type_id'       => $documentation->id,
                 'parent_id'     => null,
                 'name'          => 'Installation',
                 'slug'          => 'installation',
@@ -91,7 +95,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 3, // Documentation
+                'type_id'       => $documentation->id,
                 'parent_id'     => null,
                 'name'          => 'Release Notes',
                 'slug'          => 'release-notes',
@@ -124,7 +128,7 @@ class CategorySeeder extends Seeder
         $operator = User::operator()->firstOrFail();
 
         $default = [
-            'type'          => Type::Operator->value,
+            'type'          => ActivityLogType::Operator->value,
             'rel_route'     => 'selfservice.operator.category.edit',
             'section'       => 'general.category',
             'user_id'       => $operator->id,
