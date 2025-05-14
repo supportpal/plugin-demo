@@ -16,12 +16,10 @@ class TypeSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'Documentation';
-
         DB::table('article_type')->insert([
             [
                 'brand_id'          => Brand::where('name', 'LIKE', 'Brand Demo')->first()->id,
-                'name'              => $name,
+                'name'              => $name = 'Documentation',
                 'slug'              => getSlug($name),
                 'description'       => 'View our manual on setting up and using our software.',
                 'enabled'           => 1,

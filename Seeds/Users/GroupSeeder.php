@@ -3,83 +3,126 @@
 namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use DB;
+use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\Core\Models\Brand;
+use App\Modules\Ticket\Models\Department;
+use App\Modules\User\Models\Role;
+use App\Modules\User\Models\User;
+use Illuminate\Support\Facades\DB;
+
+use function inet_pton;
+use function now;
 
 class GroupSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        $time = time();
+        $time = now()->getTimestamp();
 
-        DB::table('user_group')->insert([
+        $groups = [
             [
-                'name'          => 'VIP',
-                'description'   => 'Very Important Persons',
-                'colour'        => '#e01212',
-                'administrator' => 0,
-                'created_at'    => $time,
-                'updated_at'    => $time
+                'data' => [
+                    'name'          => 'VIP',
+                    'description'   => 'Very Important Persons',
+                    'colour'        => '#e01212',
+                    'administrator' => 0,
+                    'created_at'    => $time,
+                    'updated_at'    => $time,
+                ],
+                'activity' => [
+                    'rel_name'  => 'VIP',
+                    'rel_route' => 'user.operator.usergroup.edit',
+                    'section'   => 'user.group',
+                ],
             ],
             [
-                'name'          => 'Local users',
-                'description'   => 'Users that are located within a 10 mile radius of our office',
-                'colour'        => '#4dba1a',
-                'administrator' => 0,
-                'created_at'    => $time,
-                'updated_at'    => $time
+                'data' => [
+                    'name'          => 'Local users',
+                    'description'   => 'Users that are located within a 10 mile radius of our office',
+                    'colour'        => '#4dba1a',
+                    'administrator' => 0,
+                    'created_at'    => $time,
+                    'updated_at'    => $time,
+                ],
+                'activity' => [
+                    'rel_name'  => 'Local users',
+                    'rel_route' => 'user.operator.usergroup.edit',
+                    'section'   => 'user.group',
+                ],
             ],
             [
-                'name'          => 'Support Team',
-                'description'   => 'Operators with only support permissions',
-                'colour'        => '#8e44ad',
-                'administrator' => 1,
-                'created_at'    => $time,
-                'updated_at'    => $time
+                'data' => [
+                    'name'          => 'Support Team',
+                    'description'   => 'Operators with only support permissions',
+                    'colour'        => '#8e44ad',
+                    'administrator' => 1,
+                    'created_at'    => $time,
+                    'updated_at'    => $time,
+                ],
+                'activity' => [
+                    'rel_name'  => 'Support Team',
+                    'rel_route' => 'user.operator.operatorgroup.edit',
+                    'section'   => 'user.operator_group',
+                ],
+                'extra' => [
+                    'department_group_membership' => ['department_id' => Department::firstOrFail()->id],
+                    'group_role_membership'       => ['role_id' => Role::where('name', 'Support Operator')->firstOrFail()->id],
+                    'brand_operator_group_membership' => [
+                        ['brand_id' => Brand::where('name', 'SupportPal')->firstOrFail()->id],
+                        ['brand_id' => Brand::where('name', 'Brand Demo')->firstOrFail()->id],
+                    ],
+                ],
             ],
-        ]);
+        ];
 
-        // Assign operator group to Support department.
-        DB::table('department_group_membership')->insert([
-            'department_id' => 1, 'group_id' => 4
-        ]);
+        $activityLogData = [];
+        foreach ($groups as $group) {
+            $groupId = DB::table('user_group')->insertGetId($group['data']);
+            $activityLogData[] = array_merge(['rel_id' => $groupId], $group['activity']);
 
-        // Associate support team group with role.
-        DB::table('group_role_membership')->insert([ 'group_id' => 4, 'role_id' => 2 ]);
-        
-        // Associate support team group with brands.
-        DB::table('brand_operator_group_membership')->insert([
-            [ 'brand_id' => 1, 'group_id' => 4 ],
-            [ 'brand_id' => 2, 'group_id' => 4 ],
-        ]);
+            if (isset($group['extra'])) {
+                if (isset($group['extra']['department_group_membership'])) {
+                    DB::table('department_group_membership')
+                        ->insert(['group_id' => $groupId] + $group['extra']['department_group_membership']);
+                }
 
-        $this->activityLog([
-            [ 'rel_id' => 2, 'rel_name' => 'VIP', 'rel_route' => 'user.operator.usergroup.edit', 'section' => 'user.group' ],
-            [ 'rel_id' => 3, 'rel_name' => 'Local users', 'rel_route' => 'user.operator.usergroup.edit', 'section' => 'user.group' ],
-            [ 'rel_id' => 4, 'rel_name' => 'Support Team', 'rel_route' => 'user.operator.operatorgroup.edit', 'section' => 'user.operator_group' ],
-        ]);
+                if (isset($group['extra']['group_role_membership'])) {
+                    DB::table('group_role_membership')
+                        ->insert(['group_id' => $groupId] + $group['extra']['group_role_membership']);
+                }
+
+                if (isset($group['extra']['brand_operator_group_membership'])) {
+                    foreach ($group['extra']['brand_operator_group_membership'] as $brand) {
+                        DB::table('brand_operator_group_membership')
+                            ->insert(['group_id' => $groupId] + $brand);
+                    }
+                }
+            }
+        }
+
+        $this->activityLog($activityLogData);
     }
 
     /**
      * Add activity log entries.
      *
-     * @param  array $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
-     * @return void
+     * @param mixed[] $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
      */
-    private function activityLog(array $data)
+    private function activityLog(array $data): void
     {
+        $operator = User::operator()->firstOrFail();
+
         $default = [
-            'type'          => 1,
-            'user_id'       => 1,
-            'user_name'     => 'John Doe',
+            'type'          => Type::Operator->value,
+            'user_id'       => $operator->id,
+            'user_name'     => $operator->formatted_name,
             'event_name'    => 'item_created',
             'ip'            => inet_pton('81.8.12.192'),
-            'created_at'    => time(),
-            'updated_at'    => time()
+            'created_at'    => now()->getTimestamp(),
+            'updated_at'    => now()->getTimestamp(),
         ];
 
         foreach ($data as $k => $row) {

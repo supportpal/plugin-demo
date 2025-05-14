@@ -3,22 +3,29 @@
 namespace Addons\Plugins\Demo\Seeds\SelfService;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use DB;
+use App\Modules\Core\Models\ActivityLog\Type as ActivityLogType;
+use App\Modules\Selfservice\Models\Type;
+use App\Modules\User\Models\User;
+use Illuminate\Support\Facades\DB;
+
+use function inet_pton;
+use function now;
 
 class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        $time = time();
+        $time = now()->getTimestamp();
+        $announcements = Type::where('slug', 'announcements')->firstOrFail();
+        $knowledgebase = Type::where('slug', 'knowledgebase')->firstOrFail();
+        $documentation = Type::where('slug', 'documentation')->firstOrFail();
 
-        DB::table('article_category')->insert([
+        $categories = [
             [
-                'type_id'       => 1, // Announcements
+                'type_id'       => $announcements->id,
                 'parent_id'     => null,
                 'name'          => 'Press Releases',
                 'slug'          => 'press-releases',
@@ -28,7 +35,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 1, // Announcements
+                'type_id'       => $announcements->id,
                 'parent_id'     => null,
                 'name'          => 'General',
                 'slug'          => 'general',
@@ -38,7 +45,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
+                'type_id'       => $knowledgebase->id,
                 'parent_id'     => null,
                 'name'          => 'Getting Started',
                 'slug'          => 'getting-started',
@@ -48,7 +55,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
+                'type_id'       => $knowledgebase->id,
                 'parent_id'     => null,
                 'name'          => 'Customisation',
                 'slug'          => 'customisation',
@@ -58,8 +65,8 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
-                'parent_id'     => 4,
+                'type_id'       => $knowledgebase->id,
+                'parent_id'     => null,
                 'name'          => 'API',
                 'slug'          => 'api',
                 'public'        => 1,
@@ -68,8 +75,8 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 2, // Knowledgebase
-                'parent_id'     => 4,
+                'type_id'       => $knowledgebase->id,
+                'parent_id'     => null,
                 'name'          => 'Plugins',
                 'slug'          => 'plugins',
                 'public'        => 0,
@@ -78,7 +85,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 3, // Documentation
+                'type_id'       => $documentation->id,
                 'parent_id'     => null,
                 'name'          => 'Installation',
                 'slug'          => 'installation',
@@ -88,7 +95,7 @@ class CategorySeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'type_id'       => 3, // Documentation
+                'type_id'       => $documentation->id,
                 'parent_id'     => null,
                 'name'          => 'Release Notes',
                 'slug'          => 'release-notes',
@@ -96,40 +103,40 @@ class CategorySeeder extends Seeder
                 'parent_public' => 1,
                 'created_at'    => $time,
                 'updated_at'    => $time,
-            ]
-        ]);
+            ],
+        ];
 
-        // Activity Log
-        $this->activityLog([
-            [ 'rel_id' => 1, 'rel_name' => 'Press Releases' ],
-            [ 'rel_id' => 2, 'rel_name' => 'General' ],
-            [ 'rel_id' => 3, 'rel_name' => 'Getting Started' ],
-            [ 'rel_id' => 4, 'rel_name' => 'Customisation' ],
-            [ 'rel_id' => 5, 'rel_name' => 'API' ],
-            [ 'rel_id' => 6, 'rel_name' => 'Plugins' ],
-            [ 'rel_id' => 7, 'rel_name' => 'Installation' ],
-            [ 'rel_id' => 8, 'rel_name' => 'Release Notes' ],
-        ]);
+        $activityLogData = [];
+        foreach ($categories as $category) {
+            $id = DB::table('article_category')->insertGetId($category);
+            $activityLogData[] = [
+                'rel_id'   => $id,
+                'rel_name' => $category['name'],
+            ];
+        }
+
+        $this->activityLog($activityLogData);
     }
 
     /**
      * Add activity log entries.
      *
-     * @param  array $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
-     * @return void
+     * @param mixed[] $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
      */
-    private function activityLog(array $data)
+    private function activityLog(array $data): void
     {
+        $operator = User::operator()->firstOrFail();
+
         $default = [
-            'type'          => 1,
+            'type'          => ActivityLogType::Operator->value,
             'rel_route'     => 'selfservice.operator.category.edit',
             'section'       => 'general.category',
-            'user_id'       => 1,
-            'user_name'     => 'John Doe',
+            'user_id'       => $operator->id,
+            'user_name'     => $operator->formatted_name,
             'event_name'    => 'item_created',
             'ip'            => inet_pton('81.8.12.192'),
-            'created_at'    => time(),
-            'updated_at'    => time()
+            'created_at'    => now()->getTimestamp(),
+            'updated_at'    => now()->getTimestamp(),
         ];
 
         foreach ($data as $k => $row) {
