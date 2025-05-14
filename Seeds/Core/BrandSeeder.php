@@ -2,57 +2,87 @@
 
 namespace Addons\Plugins\Demo\Seeds\Core;
 
-if (!defined('HTTP_URL_REPLACE')) {
+if (! defined('HTTP_URL_REPLACE')) {
     define('HTTP_URL_REPLACE', 1);
 }
-if (!defined('HTTP_URL_JOIN_PATH')) {
+
+if (! defined('HTTP_URL_JOIN_PATH')) {
     define('HTTP_URL_JOIN_PATH', 2);
 }
-if (!defined('HTTP_URL_JOIN_QUERY')) {
+
+if (! defined('HTTP_URL_JOIN_QUERY')) {
     define('HTTP_URL_JOIN_QUERY', 4);
 }
-if (!defined('HTTP_URL_STRIP_USER')) {
+
+if (! defined('HTTP_URL_STRIP_USER')) {
     define('HTTP_URL_STRIP_USER', 8);
 }
-if (!defined('HTTP_URL_STRIP_PASS')) {
+
+if (! defined('HTTP_URL_STRIP_PASS')) {
     define('HTTP_URL_STRIP_PASS', 16);
 }
-if (!defined('HTTP_URL_STRIP_AUTH')) {
+
+if (! defined('HTTP_URL_STRIP_AUTH')) {
     define('HTTP_URL_STRIP_AUTH', 32);
 }
-if (!defined('HTTP_URL_STRIP_PORT')) {
+
+if (! defined('HTTP_URL_STRIP_PORT')) {
     define('HTTP_URL_STRIP_PORT', 64);
 }
-if (!defined('HTTP_URL_STRIP_PATH')) {
+
+if (! defined('HTTP_URL_STRIP_PATH')) {
     define('HTTP_URL_STRIP_PATH', 128);
 }
-if (!defined('HTTP_URL_STRIP_QUERY')) {
+
+if (! defined('HTTP_URL_STRIP_QUERY')) {
     define('HTTP_URL_STRIP_QUERY', 256);
 }
-if (!defined('HTTP_URL_STRIP_FRAGMENT')) {
+
+if (! defined('HTTP_URL_STRIP_FRAGMENT')) {
     define('HTTP_URL_STRIP_FRAGMENT', 512);
 }
-if (!defined('HTTP_URL_STRIP_ALL')) {
+
+if (! defined('HTTP_URL_STRIP_ALL')) {
     define('HTTP_URL_STRIP_ALL', 1024);
 }
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
+use App\Modules\Core\Models\ActivityLog\Type;
 use App\Modules\Core\Models\Brand;
-use DB;
+use App\Modules\User\Models\User;
+use App\Modules\User\Models\UserGroup;
+use Illuminate\Support\Facades\DB;
+
+use function array_replace_recursive;
+use function basename;
+use function constant;
+use function define;
+use function defined;
+use function http_build_query;
+use function inet_pton;
+use function is_array;
+use function is_string;
+use function ltrim;
+use function now;
+use function parse_str;
+use function parse_url;
+use function rtrim;
+use function str_replace;
+use function strtoupper;
+use function substr;
 
 class BrandSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $url = parse_url(Brand::first()->system_url);
         $url['host'] = 'brand-' . $url['host'];
 
         $brandUrl = $this->http_build_url($url);
+        $time = now()->getTimestamp();
 
         // Add the brand.
         $id = DB::table('brand')->insertGetId([
@@ -66,28 +96,30 @@ class BrandSeeder extends Seeder
             'global_email_header' => '',
             'global_email_footer' => '<hr /><strong>{{ brand.name }}</strong>',
             'language_toggle' => 0,
-            'created_at' => time(),
-            'updated_at' => time()
+            'created_at' => $time,
+            'updated_at' => $time
         ]);
 
         // Associate article with types.
         DB::table('brand_operator_group_membership')->insert([
             'brand_id' => $id,
-            'group_id' => 1
+            'group_id' => UserGroup::SYSTEM_ADMINISTRATOR
         ]);
 
+        $operator = User::operator()->firstOrFail();
+
         DB::table('activity_log')->insert([
-            'type'          => 1,
+            'type'          => Type::Operator->value,
             'rel_id'        => $id,
             'rel_name'      => 'Brand Demo',
             'rel_route'     => 'core.operator.brand.edit',
             'section'       => 'core.brand',
-            'user_id'       => 1,
-            'user_name'     => 'John Doe',
+            'user_id'       => $operator->id,
+            'user_name'     => $operator->formatted_name,
             'event_name'    => 'item_created',
             'ip'            => inet_pton('81.8.12.192'),
-            'created_at'    => time(),
-            'updated_at'    => time()
+            'created_at'    => $time,
+            'updated_at'    => $time
         ]);
     }
 
@@ -127,16 +159,20 @@ class BrandSeeder extends Seeder
 
         // Schema and host are alwasy replaced
         foreach (array('scheme', 'host') as $part) {
-            if (isset($parts[$part])) {
-                $url[$part] = $parts[$part];
+            if (! isset($parts[$part])) {
+                continue;
             }
+
+            $url[$part] = $parts[$part];
         }
 
         if ($flags & HTTP_URL_REPLACE) {
             foreach ($keys as $key) {
-                if (isset($parts[$key])) {
-                    $url[$key] = $parts[$key];
+                if (! isset($parts[$key])) {
+                    continue;
                 }
+
+                $url[$key] = $parts[$key];
             }
         } else {
             if (isset($parts['path']) && ($flags & HTTP_URL_JOIN_PATH)) {
@@ -144,9 +180,9 @@ class BrandSeeder extends Seeder
                     // Workaround for trailing slashes
                     $url['path'] .= 'a';
                     $url['path'] = rtrim(
-                            str_replace(basename($url['path']), '', $url['path']),
-                            '/'
-                        ) . '/' . ltrim($parts['path'], '/');
+                        str_replace(basename($url['path']), '', $url['path']),
+                        '/'
+                    ) . '/' . ltrim($parts['path'], '/');
                 } else {
                     $url['path'] = $parts['path'];
                 }
@@ -175,18 +211,20 @@ class BrandSeeder extends Seeder
 
         foreach ($keys as $key) {
             $strip = 'HTTP_URL_STRIP_' . strtoupper($key);
-            if ($flags & constant($strip)) {
-                unset($url[$key]);
+            if (! ($flags & constant($strip))) {
+                continue;
             }
+
+            unset($url[$key]);
         }
 
         $parsed_string = '';
 
-        if (!empty($url['scheme'])) {
+        if (! empty($url['scheme'])) {
             $parsed_string .= $url['scheme'] . '://';
         }
 
-        if (!empty($url['user'])) {
+        if (! empty($url['user'])) {
             $parsed_string .= $url['user'];
 
             if (isset($url['pass'])) {
@@ -196,23 +234,23 @@ class BrandSeeder extends Seeder
             $parsed_string .= '@';
         }
 
-        if (!empty($url['host'])) {
+        if (! empty($url['host'])) {
             $parsed_string .= $url['host'];
         }
 
-        if (!empty($url['port'])) {
+        if (! empty($url['port'])) {
             $parsed_string .= ':' . $url['port'];
         }
 
-        if (!empty($url['path'])) {
+        if (! empty($url['path'])) {
             $parsed_string .= $url['path'];
         }
 
-        if (!empty($url['query'])) {
+        if (! empty($url['query'])) {
             $parsed_string .= '?' . $url['query'];
         }
 
-        if (!empty($url['fragment'])) {
+        if (! empty($url['fragment'])) {
             $parsed_string .= '#' . $url['fragment'];
         }
 

@@ -2,8 +2,10 @@
 
 namespace Addons\Plugins\Demo\Events\Observers;
 
+use App\Modules\User\Models\Enums\UserRole;
 use App\Modules\User\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use function array_merge;
 
 class UserObserver
 {
@@ -50,7 +52,7 @@ class UserObserver
     {
         $email = $user->exists ? $user->getOriginal('email') : $user->email;
 
-        return ($user->role === User::ROLE_OPERATOR && $email === 'operator@demo.com')
-            || ($user->role === USER::ROLE_USER && $email === 'user@demo.com');
+        return ($user->role === UserRole::Operator && $email === 'operator@demo.com')
+            || ($user->role === UserRole::User && $email === 'user@demo.com');
     }
 }

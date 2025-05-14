@@ -38,17 +38,15 @@ use Addons\Plugins\Demo\Seeds\Widgets\Notes;
 use Addons\Plugins\Demo\Seeds\Widgets\Todo;
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\User\Models\Permission;
-use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         Model::unguard();
 

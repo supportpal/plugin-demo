@@ -3,82 +3,74 @@
 namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use DB;
+use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\User\Models\User;
+use Illuminate\Support\Facades\DB;
+
+use function array_merge;
+use function inet_pton;
+use function now;
 
 class CustomFieldSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        DB::table('user_customfield')->insert([
-            [
-                'name'      => 'Address 1',
-                'type'      => 8, // Text
-                'order'     => 1,
-                'created_at'=> time(),
-                'updated_at'=> time(),
-            ],
-            [
-                'name'      => 'Address 2',
-                'type'      => 8, // Text
-                'order'     => 2,
-                'created_at'=> time(),
-                'updated_at'=> time(),
-            ],
-            [
-                'name'      => 'Postal Code',
-                'type'      => 8, // Text
-                'order'     => 1,
-                'created_at'=> time(),
-                'updated_at'=> time(),
-            ],
-            [
-                'name'      => 'How did you find us?',
-                'type'      => 8, // Text
-                'order'     => 1,
-                'created_at'=> time(),
-                'updated_at'=> time(),
-            ],
-        ]);
+        $time = now()->getTimestamp();
 
-        // Assign custom fields to brands.
-        DB::table('user_customfield_brand_membership')->insert([
-            [ 'field_id' => 1, 'brand_id' => 1 ],
-            [ 'field_id' => 2, 'brand_id' => 1 ],
-            [ 'field_id' => 3, 'brand_id' => 1 ],
-            [ 'field_id' => 4, 'brand_id' => 1 ],
-        ]);
+        $fields = [
+            ['name' => 'Address 1', 'type' => 8, 'order' => 1],
+            ['name' => 'Address 2', 'type' => 8, 'order' => 2],
+            ['name' => 'Postal Code', 'type' => 8, 'order' => 1],
+            ['name' => 'How did you find us?', 'type' => 8, 'order' => 1],
+        ];
 
-        $this->activityLog([
-            ['rel_id' => 1, 'rel_name' => 'Address 1'],
-            ['rel_id' => 2, 'rel_name' => 'Address 2'],
-            ['rel_id' => 3, 'rel_name' => 'Postal Code'],
-            ['rel_id' => 4, 'rel_name' => 'How did you find us?'],
-        ]);
+        $activityLogData = [];
+        $brandMembershipData = [];
+
+        foreach ($fields as $index => $field) {
+            $fieldId = DB::table('user_customfield')->insertGetId(array_merge($field, [
+                'created_at' => $time,
+                'updated_at' => $time,
+            ]));
+
+            $activityLogData[] = [
+                'rel_id'   => $fieldId,
+                'rel_name' => $field['name'],
+            ];
+
+            $brandMembershipData[] = [
+                'field_id' => $fieldId,
+                'brand_id' => 1,
+            ];
+        }
+
+        DB::table('user_customfield_brand_membership')->insert($brandMembershipData);
+        $this->activityLog($activityLogData);
     }
 
     /**
      * Add activity log entries.
      *
-     * @param  array $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
+     * @param mixed[] $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
      * @return void
      */
-    private function activityLog(array $data)
+    private function activityLog(array $data): void
     {
+        $operator = User::operator()->firstOrFail();
+
         $default = [
-            'type'          => 1,
+            'type'          => Type::Operator,
             'rel_route'     => 'user.operator.customfield.edit',
             'section'       => 'user.customfield',
-            'user_id'       => 1,
-            'user_name'     => 'John Doe',
+            'user_id'       => $operator->id,
+            'user_name'     => $operator->formatted_name,
             'event_name'    => 'item_created',
             'ip'            => inet_pton('81.8.12.192'),
-            'created_at'    => time(),
-            'updated_at'    => time()
+            'created_at'    => now()->getTimestamp(),
+            'updated_at'    => now()->getTimestamp()
         ];
 
         foreach ($data as $k => $row) {

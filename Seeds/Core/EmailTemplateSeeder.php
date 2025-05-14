@@ -4,18 +4,18 @@ namespace Addons\Plugins\Demo\Seeds\Core;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\Core\Models\EmailTemplate;
-use DB;
+use Illuminate\Support\Facades\DB;
+
+use function now;
 
 class EmailTemplateSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        $time= time();
+        $time = now()->getTimestamp();
 
         DB::table('email_template')->insert([
             'id'          => 100,

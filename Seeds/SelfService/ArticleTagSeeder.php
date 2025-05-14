@@ -3,66 +3,61 @@
 namespace Addons\Plugins\Demo\Seeds\SelfService;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use DB;
+use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\User\Models\User;
+use Illuminate\Support\Facades\DB;
+
+use function inet_pton;
+use function now;
 
 class ArticleTagSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        $time = time();
+        $time = now()->getTimestamp();
 
-        DB::table('article_tag')->insert([
-            [
-                'name'      => 'How To',
-                'slug'      => 'how-to',
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'name'       => 'Code Samples',
-                'slug'       => 'code-samples',
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'name'       => 'Release',
-                'slug'       => 'release',
-                'created_at' => $time,
-                'updated_at' => $time
-            ]
-        ]);
+        $tags = [
+            ['name' => 'How To', 'slug' => 'how-to'],
+            ['name' => 'Code Samples', 'slug' => 'code-samples'],
+            ['name' => 'Release', 'slug' => 'release'],
+        ];
 
-        // Activity Log
-        $this->activityLog([
-            [ 'rel_id' => 1, 'rel_name' => 'How To' ],
-            [ 'rel_id' => 2, 'rel_name' => 'Code Samples' ],
-            [ 'rel_id' => 3, 'rel_name' => 'Release' ],
-        ]);
+        $activityLogData = [];
+        foreach ($tags as $tag) {
+            $tagId = DB::table('article_tag')->insertGetId([
+                'name'       => $tag['name'],
+                'slug'       => $tag['slug'],
+                'created_at' => $time,
+                'updated_at' => $time,
+            ]);
+            $activityLogData[] = ['rel_id' => $tagId, 'rel_name' => $tag['name']];
+        }
+
+        $this->activityLog($activityLogData);
     }
 
     /**
      * Add activity log entries.
      *
-     * @param  array $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
-     * @return void
+     * @param mixed[] $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
      */
-    private function activityLog(array $data)
+    private function activityLog(array $data): void
     {
+        $operator = User::operator()->firstOrFail();
+
         $default = [
-            'type'          => 1,
+            'type'          => Type::Operator->value,
             'rel_route'     => 'selfservice.operator.tag.edit',
             'section'       => 'selfservice.tag',
-            'user_id'       => 1,
-            'user_name'     => 'John Doe',
+            'user_id'       => $operator->id,
+            'user_name'     => $operator->formatted_name,
             'event_name'    => 'item_created',
             'ip'            => inet_pton('81.8.12.192'),
-            'created_at'    => time(),
-            'updated_at'    => time()
+            'created_at'    => now()->getTimestamp(),
+            'updated_at'    => now()->getTimestamp()
         ];
 
         foreach ($data as $k => $row) {

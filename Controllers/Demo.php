@@ -7,6 +7,9 @@ use Addons\Plugins\Demo\Middleware\GeneralSettings;
 use App\Modules\Core\Controllers\Plugins\Plugin;
 use App\Modules\User\Models\User;
 
+use function session;
+use function view;
+
 class Demo extends Plugin
 {
     /**
@@ -71,8 +74,8 @@ class Demo extends Plugin
      */
     protected function setLoginCredentials()
     {
-        view()->composer('operator.*.login', function ($view) {
-            session()->flash('_old_input', [ 'email' => 'operator@demo.com' ]);
+        view()->composer('operator.*.login', function () {
+            session()->flash('_old_input', ['email' => 'operator@demo.com']);
         });
         view()->composer('operator.*.login_master', function () {
             view()->hook('operator.body_end', function () {
@@ -80,8 +83,8 @@ class Demo extends Plugin
             });
         });
 
-        view()->composer('frontend.*.login', function ($view) {
-            session()->flash('_old_input', [ 'email' => 'user@demo.com' ]);
+        view()->composer('frontend.*.login', function () {
+            session()->flash('_old_input', ['email' => 'user@demo.com']);
         });
         view()->composer('frontend.*.index', function () {
             view()->hook('frontend.body_end', function () {

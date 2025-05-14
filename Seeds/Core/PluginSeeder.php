@@ -11,10 +11,8 @@ class PluginSeeder extends Seeder
 {
     /**
      * Enable the plugin.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         PluginFactory::synchronise();
 

@@ -3,18 +3,22 @@
 namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use DB;
-use Hash;
+use App\Modules\Core\Models\ActivityLog\Type;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+use function inet_pton;
+use function now;
 
 class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
+        $time = now()->getTimestamp();
+
         // Patrick Mason part of organisation 1
         DB::table('user')->insert([
             [
@@ -29,8 +33,8 @@ class UserSeeder extends Seeder
                 'country'       => 'GB',
                 'language_code' => 'en',
                 'timezone'      => 'Europe/London',
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
                 'brand_id'      => 2,
@@ -44,8 +48,8 @@ class UserSeeder extends Seeder
                 'country'       => 'GB',
                 'language_code' => 'en',
                 'timezone'      => 'Europe/London',
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
                 'brand_id'      => 1,
@@ -59,8 +63,8 @@ class UserSeeder extends Seeder
                 'country'       => 'GB',
                 'language_code' => 'en',
                 'timezone'      => 'Europe/London',
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
                 'brand_id'      => 1,
@@ -74,8 +78,8 @@ class UserSeeder extends Seeder
                 'country'       => 'GB',
                 'language_code' => 'en',
                 'timezone'      => 'Europe/London',
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
                 'brand_id'      => 2,
@@ -89,8 +93,8 @@ class UserSeeder extends Seeder
                 'country'       => 'US',
                 'language_code' => 'en',
                 'timezone'      => 'America/New_York',
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
                 'brand_id'      => 1,
@@ -104,20 +108,20 @@ class UserSeeder extends Seeder
                 'country'       => 'GB',
                 'language_code' => 'en',
                 'timezone'      => 'Europe/London',
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
         ]);
-        
+
         // Add custom field values.
         DB::table('user_customfield_value')->insert([
-            [ 'field_id' => 1, 'user_id' => 3, 'value' => '123 Arctic Drive', 'created_at' => time(), 'updated_at' => time() ],
-            [ 'field_id' => 3, 'user_id' => 3, 'value' => 'AR3 T1C', 'created_at' => time(), 'updated_at' => time() ],
-            [ 'field_id' => 4, 'user_id' => 3, 'value' => 'Google', 'created_at' => time(), 'updated_at' => time() ],
-            [ 'field_id' => 4, 'user_id' => 5, 'value' => 'Referral by another client', 'created_at' => time(), 'updated_at' => time() ],
-            [ 'field_id' => 4, 'user_id' => 7, 'value' => 'Seen on TV', 'created_at' => time(), 'updated_at' => time() ],
+            [ 'field_id' => 1, 'user_id' => 3, 'value' => '123 Arctic Drive', 'created_at' => $time, 'updated_at' => $time ],
+            [ 'field_id' => 3, 'user_id' => 3, 'value' => 'AR3 T1C', 'created_at' => $time, 'updated_at' => $time ],
+            [ 'field_id' => 4, 'user_id' => 3, 'value' => 'Google', 'created_at' => $time, 'updated_at' => $time ],
+            [ 'field_id' => 4, 'user_id' => 5, 'value' => 'Referral by another client', 'created_at' => $time, 'updated_at' => $time ],
+            [ 'field_id' => 4, 'user_id' => 7, 'value' => 'Seen on TV', 'created_at' => $time, 'updated_at' => $time ],
         ]);
-        
+
         // Associate with user groups.
         DB::table('user_membership')->insert([
             [ 'user_id' => 3, 'group_id' => 2 ],
@@ -132,7 +136,7 @@ class UserSeeder extends Seeder
 
         DB::table('activity_log')->insert([
             [
-                'type'          => 1,
+                'type'          => Type::Operator->value,
                 'rel_name'      => 'Patrick Mason',
                 'rel_id'        => 3,
                 'rel_route'     => 'user.operator.user.edit',
@@ -141,11 +145,11 @@ class UserSeeder extends Seeder
                 'user_name'     => 'John Doe',
                 'event_name'    => 'item_created',
                 'ip'            => inet_pton('81.8.12.192'),
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
-                'type'          => 1,
+                'type'          => Type::Operator->value,
                 'rel_name'      => 'Patrick Mason',
                 'rel_id'        => 4,
                 'rel_route'     => 'user.operator.user.edit',
@@ -154,11 +158,11 @@ class UserSeeder extends Seeder
                 'user_name'     => 'John Doe',
                 'event_name'    => 'item_created',
                 'ip'            => inet_pton('81.8.12.192'),
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
-                'type'          => 2,
+                'type'          => Type::User->value,
                 'rel_name'      => 'Joe Bloggs',
                 'rel_id'        => 5,
                 'rel_route'     => 'user.operator.user.edit',
@@ -167,11 +171,11 @@ class UserSeeder extends Seeder
                 'user_name'     => 'Joe Bloggs',
                 'event_name'    => 'user_registered',
                 'ip'            => inet_pton('81.8.12.192'),
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
-                'type'          => 1,
+                'type'          => Type::Operator->value,
                 'rel_name'      => 'Jane Mason',
                 'rel_id'        => 6,
                 'rel_route'     => 'user.operator.user.edit',
@@ -180,11 +184,11 @@ class UserSeeder extends Seeder
                 'user_name'     => 'John Doe',
                 'event_name'    => 'item_created',
                 'ip'            => inet_pton('81.8.12.192'),
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
-                'type'          => 1,
+                'type'          => Type::Operator->value,
                 'rel_name'      => 'Barry Klein',
                 'rel_id'        => 7,
                 'rel_route'     => 'user.operator.user.edit',
@@ -193,11 +197,11 @@ class UserSeeder extends Seeder
                 'user_name'     => 'John Doe',
                 'event_name'    => 'item_created',
                 'ip'            => inet_pton('81.8.12.192'),
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
             [
-                'type'          => 1,
+                'type'          => Type::Operator->value,
                 'rel_name'      => 'Clare Anderson',
                 'rel_id'        => 8,
                 'rel_route'     => 'user.operator.user.edit',
@@ -206,8 +210,8 @@ class UserSeeder extends Seeder
                 'user_name'     => 'John Doe',
                 'event_name'    => 'item_created',
                 'ip'            => inet_pton('81.8.12.192'),
-                'created_at'    => time(),
-                'updated_at'    => time()
+                'created_at'    => $time,
+                'updated_at'    => $time
             ],
         ]);
     }

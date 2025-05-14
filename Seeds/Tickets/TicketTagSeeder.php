@@ -3,7 +3,12 @@
 namespace Addons\Plugins\Demo\Seeds\Tickets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
-use DB;
+use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\User\Models\User;
+use Illuminate\Support\Facades\DB;
+
+use function inet_pton;
+use function now;
 
 class TicketTagSeeder extends Seeder
 {
@@ -12,62 +17,53 @@ class TicketTagSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        DB::table('ticket_tag')->insert([
-            [
-                'name'       => 'Feature Request',
-                'colour'     => '#e67e22',
-                'created_at' => time(),
-                'updated_at' => time()
-            ],
-            [
-                'name'       => 'Bug',
-                'colour'     => '#c0392b',
-                'created_at' => time(),
-                'updated_at' => time()
-            ],
-            [
-                'name'       => 'Custom Work',
-                'colour'     => '#16a085',
-                'created_at' => time(),
-                'updated_at' => time()
-            ],
-            [
-                'name'       => 'Logged',
-                'colour'     => '#95a5a6',
-                'created_at' => time(),
-                'updated_at' => time()
-            ],
-        ]);
+        $time = now()->getTimestamp();
 
-        // Activity Log
-        $this->activityLog([
-            [ 'rel_id' => 1, 'rel_name' => 'Feature Request' ],
-            [ 'rel_id' => 2, 'rel_name' => 'Bug' ],
-            [ 'rel_id' => 3, 'rel_name' => 'Custom Work' ],
-            [ 'rel_id' => 4, 'rel_name' => 'Logged' ],
-        ]);
+        $tags = [
+            ['name' => 'Feature Request', 'colour' => '#e67e22'],
+            ['name' => 'Bug', 'colour' => '#c0392b'],
+            ['name' => 'Custom Work', 'colour' => '#16a085'],
+            ['name' => 'Logged', 'colour' => '#95a5a6'],
+        ];
+
+        $activityLogData = [];
+        foreach ($tags as $tag) {
+            $tagId = DB::table('ticket_tag')->insertGetId([
+                'name'       => $tag['name'],
+                'colour'     => $tag['colour'],
+                'created_at' => $time,
+                'updated_at' => $time,
+            ]);
+            $activityLogData[] = [
+                'rel_id'   => $tagId,
+                'rel_name' => $tag['name'],
+            ];
+        }
+
+        $this->activityLog($activityLogData);
     }
 
     /**
      * Add activity log entries.
      *
-     * @param  array $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
-     * @return void
+     * @param mixed[] $data [ [ 'rel_name' => '', 'rel_id' => '' ], [ .. ] ]
      */
-    private function activityLog(array $data)
+    private function activityLog(array $data): void
     {
+        $operator = User::operator()->firstOrFail();
+
         $default = [
-            'type'          => 1,
+            'type'          => Type::Operator->value,
             'rel_route'     => 'ticket.operator.tag.edit',
             'section'       => 'ticket.tag',
-            'user_id'       => 1,
-            'user_name'     => 'John Doe',
+            'user_id'       => $operator->id,
+            'user_name'     => $operator->formatted_name,
             'event_name'    => 'item_created',
             'ip'            => inet_pton('81.8.12.192'),
-            'created_at'    => time(),
-            'updated_at'    => time()
+            'created_at'    => now()->getTimestamp(),
+            'updated_at'    => now()->getTimestamp()
         ];
 
         foreach ($data as $k => $row) {

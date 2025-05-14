@@ -11,10 +11,8 @@ class LoginSeeder extends Seeder
 {
     /**
      * Enable the Demo plugin by default.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         PluginFactory::synchronise();
 
