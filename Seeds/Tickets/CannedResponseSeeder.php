@@ -58,13 +58,13 @@ class CannedResponseSeeder extends Seeder
             [ 'rel_id' => $response3, 'rel_name' => 'More details please' ],
         ]);
 
-        $tag1 = DB::table('canned_response_tag')->insert([
+        $tag1 = DB::table('canned_response_tag')->insertGetId([
             'name'       => 'Support',
             'created_at' => $time,
             'updated_at' => $time,
         ]);
 
-        $tag2 = DB::table('canned_response_tag')->insert([
+        $tag2 = DB::table('canned_response_tag')->insertGetId([
             'name'       => 'Software',
             'created_at' => $time,
             'updated_at' => $time,
