@@ -3,6 +3,9 @@
 namespace Addons\Plugins\Demo\Seeds\SelfService;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
+use App\Modules\Selfservice\Models\Category;
+use App\Modules\Selfservice\Models\Tag;
+use App\Modules\Selfservice\Models\Type;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -22,13 +25,12 @@ class ArticleSeeder extends Seeder
         $time = now()->getTimestamp();
 
         // Add the articles.
-        DB::table('article')->insert([
-            [
-                'author_id' => $authorId,
-                'title' => 'REST API',
-                'slug' => 'rest-api',
-                'excerpt'   => 'The REST API can be used to access data and perform actions from external applications.',
-                'text' => $text = '<div class="sp-editor-content">
+        $article1 = DB::table('article')->insertGetId([
+            'author_id' => $authorId,
+            'title' => 'REST API',
+            'slug' => 'rest-api',
+            'excerpt'   => 'The REST API can be used to access data and perform actions from external applications.',
+            'text' => $text = '<div class="sp-editor-content">
 <p>The REST API can be used to access data and perform actions from external applications.</p>
 <p>&nbsp;</p>
 <h2>Current Version</h2>
@@ -53,8 +55,8 @@ class ArticleSeeder extends Seeder
 <h2>Logging</h2>
 <p>Optionally, you can also use the <strong>staff_id</strong> parameter, which refers to the ID of the operator using the API for logging purposes.</p>
 </div>',
-                'purified_text' => $text,
-                'plain_text' => 'The REST API can be used to access data and perform actions from external applications.
+            'purified_text' => $text,
+            'plain_text' => 'The REST API can be used to access data and perform actions from external applications.
 Current Version
 The current version of the API is v2.
 
@@ -69,18 +71,19 @@ Time and hash are required parameters for using the API.
 
 Logging
 Optionally, you can also use the staff_id parameter, which refers to the ID of the operator using the API for logging purposes.',
-                'published' => 1,
-                'published_at' => $time,
-                'protected' => 0,
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'author_id' => $authorId,
-                'title' => 'SimpleAuth',
-                'slug' => 'simpleauth',
-                'excerpt'   => 'SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software.',
-                'text' => $text = '<div class="sp-editor-content"><p>SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.<br /><br />It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.<br /><br />SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.</p>
+            'published' => 1,
+            'published_at' => $time,
+            'protected' => 0,
+            'created_at' => $time,
+            'updated_at' => $time
+        ]);
+
+        $article2 = DB::table('article')->insertGetId([
+            'author_id' => $authorId,
+            'title' => 'SimpleAuth',
+            'slug' => 'simpleauth',
+            'excerpt'   => 'SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software.',
+            'text' => $text = '<div class="sp-editor-content"><p>SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.<br /><br />It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.<br /><br />SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.</p>
 <p>&nbsp;</p>
 <h2>Activate SimpleAuth</h2>
 <p>SimpleAuth can be used by setting a key like below in the config.php file found in the includes folder. A key may currently be set, but you are welcome to change it to any random string of characters and numbers.</p>
@@ -102,38 +105,39 @@ time=1423680791&amp;hash=bdc391437d78377767b5d435356e04eb&amp;back=http://domain
 <p>&nbsp;</p>
 <h2>Sample Code</h2>
 <pre class="language-php"><code>&lt;?php
- 
+
 // Set the login URL and SimpleAuth key
 $loginUrl = \'https://www.domain.com/support/login.php\';
 $simpleAuthKey = \'RhqFi31PpIe0eIyP08fNqA\';
- 
+
 // Set variables for hash
 $email = \'test@test.com\';
 $time = time();
 $back = \'http://domain.com/clientarea.php\';
- 
+
 // Generate hash
 $hash = md5($email . $simpleAuthKey . $time);
- 
+
 // Generate request and access it
 $request = $loginUrl . \'?email=\' . $email . \'&amp;time=\' . $time . \'&amp;hash=\' . $hash . \'&amp;back=\' . urlencode($back);
 header("Location: $request");
 exit;</code></pre></div>',
-                'purified_text' => $text,
-                'plain_text' => 'SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.Activate SimpleAuthSimpleAuth can be used by setting a key like below in the config.php file found in the includes folder. A key may currently be set, but you are welcome to change it to any random string of characters and numbers.$SIMPLEAUTH_KEY = "RhqFi31PpIe0eIyP08fNqA";Using SimpleAuthTo use SimpleAuth, we need to generate a hash for each request. This hash is generated by combining the user\'s email address, the secret key and the current timestamp like below. The timestamp must be within 10 minutes of the server time or else the request will be invalid.md5($email . $SIMPLEAUTH_KEY . $time)You can now use the resulting hash to build the request. To declare a redirect URL, use the \'back\' parameter. An example request is below.login.php?email=test@test.com&
+            'purified_text' => $text,
+            'plain_text' => 'SimpleAuth is an automatic authentication method to allow you to log users in from third party code/software. Useful in integrations with other client management software, it will generate a session for the user without them having to do anything or requiring the user\'s password.It works by constructing a special link to the login page that includes the user\'s email address, a timestamp and a hash that is generated from a defined key and the timestamp, and you can also add a redirection URL on successful authentication.SimpleAuth relies on a defined secret key in the configuration file. This is used to generate the hash and validate any requests.Activate SimpleAuthSimpleAuth can be used by setting a key like below in the config.php file found in the includes folder. A key may currently be set, but you are welcome to change it to any random string of characters and numbers.$SIMPLEAUTH_KEY = "RhqFi31PpIe0eIyP08fNqA";Using SimpleAuthTo use SimpleAuth, we need to generate a hash for each request. This hash is generated by combining the user\'s email address, the secret key and the current timestamp like below. The timestamp must be within 10 minutes of the server time or else the request will be invalid.md5($email . $SIMPLEAUTH_KEY . $time)You can now use the resulting hash to build the request. To declare a redirect URL, use the \'back\' parameter. An example request is below.login.php?email=test@test.com&
 time=1423680791&hash=bdc391437d78377767b5d435356e04eb&back=http://domain.com/clientarea.phpErrorsIf the hash is invalid, the timestamp is outdated or no key has been set, the script will return a json string that contains details of the error.',
-                'published' => 1,
-                'published_at' => now()->subDay()->subHour()->subMinutes(11)->getTimestamp(),
-                'protected' => 0,
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'author_id' => $authorId,
-                'title' => 'Upgrade an Existing Install', // Registered Users Only
-                'slug' => 'upgrade-an-existing-install',
-                'excerpt'   => 'A license with a valid support & upgrade subscription is required to download.',
-                'text' => $text = '<div class="sp-editor-content">
+            'published' => 1,
+            'published_at' => now()->subDay()->subHour()->subMinutes(11)->getTimestamp(),
+            'protected' => 0,
+            'created_at' => $time,
+            'updated_at' => $time
+        ]);
+
+        $article3 = DB::table('article')->insertGetId([
+            'author_id' => $authorId,
+            'title' => 'Upgrade an Existing Install', // Registered Users Only
+            'slug' => 'upgrade-an-existing-install',
+            'excerpt'   => 'A license with a valid support & upgrade subscription is required to download.',
+            'text' => $text = '<div class="sp-editor-content">
 <h2>Downloading</h2>
 <p>A license with a valid support &amp; upgrade subscription is required to download. Owned licenses include 6 months from date of purchase and leased licenses include lifetime support &amp; upgrades. Once you have a valid license please login to the members area, select an active license and choose the latest version you wish to download.<br /><br /><strong>Please note, if your license does not have a valid support &amp; upgrades subscription and you attempt to install a product version released after your subscription expired, the install process will fail.</strong><br /><br /></p>
 <h2>Upgrade Steps</h2>
@@ -150,8 +154,8 @@ time=1423680791&hash=bdc391437d78377767b5d435356e04eb&back=http://domain.com/cli
 <li>Enjoy</li>
 </ol>
 </div>',
-                'purified_text' => $text,
-                'plain_text' => 'Downloading A license with a valid support & upgrade subscription is required to download. Owned licenses include 6 months from date of purchase and leased licenses include lifetime support & upgrades. Once you have a valid license please login to the members area, select an active license and choose the latest version you wish to download.Please note, if your license does not have a valid support & upgrades subscription and you attempt to install a product version released after your subscription expired, the install process will fail.Upgrade StepsUpgrading is fairly simple, follow the following steps to upgrade to the latest version:
+            'purified_text' => $text,
+            'plain_text' => 'Downloading A license with a valid support & upgrade subscription is required to download. Owned licenses include 6 months from date of purchase and leased licenses include lifetime support & upgrades. Once you have a valid license please login to the members area, select an active license and choose the latest version you wish to download.Please note, if your license does not have a valid support & upgrades subscription and you attempt to install a product version released after your subscription expired, the install process will fail.Upgrade StepsUpgrading is fairly simple, follow the following steps to upgrade to the latest version:
 • Take a backup of your database
 • Download the latest version from our members area
 • Unzip the contents of the downloaded zip file
@@ -161,18 +165,19 @@ time=1423680791&hash=bdc391437d78377767b5d435356e04eb&back=http://domain.com/cli
 • Follow the instructions provided by the installer
 • Remember to clear your cache or do a hard refresh (Ctrl + R on Windows) when accessing the operator panel after completing the upgrade
 • Enjoy',
-                'published' => 1,
-                'protected' => 1,
-                'published_at' => now()->subDays(5)->subHours(3)->subMinutes(24)->getTimestamp(),
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'author_id' => $authorId,
-                'title'     => 'License Information', // Draft article - not publicly viewable.
-                'slug'      => 'license-information',
-                'excerpt'   => 'The application requires a valid license to function. All licenses are prefixed with "LIC-".',
-                'text'      => $text = '<div class="sp-editor-content">
+            'published' => 1,
+            'protected' => 1,
+            'published_at' => now()->subDays(5)->subHours(3)->subMinutes(24)->getTimestamp(),
+            'created_at' => $time,
+            'updated_at' => $time
+        ]);
+
+        $article4 = DB::table('article')->insertGetId([
+            'author_id' => $authorId,
+            'title'     => 'License Information', // Draft article - not publicly viewable.
+            'slug'      => 'license-information',
+            'excerpt'   => 'The application requires a valid license to function. All licenses are prefixed with "LIC-".',
+            'text'      => $text = '<div class="sp-editor-content">
 <p>The application requires a valid license to function. All licenses are prefixed with "LIC-".</p>
 <p>&nbsp;</p>
 <p>Once you have set up with a valid license key, visiting Help -&gt; License Information will provide you with all the relevant information attached to your license. Most of this information can also be found with your license at our client area.</p>
@@ -186,25 +191,26 @@ time=1423680791&hash=bdc391437d78377767b5d435356e04eb&back=http://domain.com/cli
 <p>&nbsp;</p>
 <p>Please contact us if this does not solve the issue.</p>
 </div>',
-                'purified_text' => $text,
-                'plain_text' => 'The application requires a valid license to function. All licenses are prefixed with "LIC-".Once you have set up with a valid license key, visiting Help -> License Information will provide you with all the relevant information attached to your license. Most of this information can also be found with your license at our client area.
+            'purified_text' => $text,
+            'plain_text' => 'The application requires a valid license to function. All licenses are prefixed with "LIC-".Once you have set up with a valid license key, visiting Help -> License Information will provide you with all the relevant information attached to your license. Most of this information can also be found with your license at our client area.
 Changing the License Key in your Installation
 Visit Help -> License Information and click "Change license" next to the current license key. Enter your new key and then click save. If you are unable to access the operator area due to a license error, there should be an option to change the license key on the error page. For either option to work, it requires that the file /includes/config.php is CHMOD 777.
 License Errors
 License Invalid
 This error generally appears when your server IP has changed or you have moved the installation to another domain/folder within the same server.It can be resolved by logging in to our client area, find your license under My Services and clicking Re-Issue License under Management Actions. You should then proceed to your operator panel login again, where you can now log in.Please contact us if this does not solve the issue.',
-                'published' => 0,
-                'protected' => 0,
-                'published_at' => now()->subDays(8)->subHours(12)->subMinutes(51)->getTimestamp(),
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'author_id' => $authorId,
-                'title'     => 'New Installations',
-                'slug'      => 'new-installations',
-                'excerpt'   => 'A license with valid support & upgrade coverage is required to download.',
-                'text'      => $text = '<div class="sp-editor-content">
+            'published' => 0,
+            'protected' => 0,
+            'published_at' => now()->subDays(8)->subHours(12)->subMinutes(51)->getTimestamp(),
+            'created_at' => $time,
+            'updated_at' => $time
+        ]);
+
+        $article5 = DB::table('article')->insertGetId([
+            'author_id' => $authorId,
+            'title'     => 'New Installations',
+            'slug'      => 'new-installations',
+            'excerpt'   => 'A license with valid support & upgrade coverage is required to download.',
+            'text'      => $text = '<div class="sp-editor-content">
 <h2>Downloading</h2>
 <p>A license with valid support &amp; upgrade coverage is required to download. Once you have a valid license please login to the members area select an active license and download the latest version.</p>
 <p>&nbsp;</p>
@@ -250,8 +256,8 @@ This error generally appears when your server IP has changed or you have moved t
 <p>&nbsp;</p>
 <p>Furthermore, if your server allows indexing through .htaccess files, please rename the <strong>htaccess </strong>file in the uploads folder to <strong>.htaccess</strong>. This will disable any PHP scripts being executed in that folder.</p>
 </div>',
-                'purified_text' => $text,
-                'plain_text' => 'Downloading
+            'purified_text' => $text,
+            'plain_text' => 'Downloading
 A license with valid support & upgrade coverage is required to download. Once you have a valid license please login to the members area select an active license and download the latest version.
 Installation StepsThe installation process is fairly simple, follow the following steps to get started:
 
@@ -277,100 +283,105 @@ Rename the admin folder
 From a security point of view, it is a good idea to rename the operator panel folder to avoid anyone being able to access it. It should be renamed to something that only your staff members know.Once you have renamed the admin folder, open /includes/config.php within your installation and set the following variable to your new admin folder name
 $ADMIN_FOLDER = "admin";
 Moving and securing the uploads folderAs the uploads folder requires CHMOD permissions 777 (writable by anyone), it is safer to move the folder out of publicly accessible folders (everything under public_html or similar on your server).If you do move the uploads server, you must update the uploads path in the general settings section in the operator panel (Settings -> General Settings -> Company).Furthermore, if your server allows indexing through .htaccess files, please rename the htaccess file in the uploads folder to .htaccess. This will disable any PHP scripts being executed in that folder.',
-                'published' => 1,
-                'published_at' => now()->subDays(9)->subHours(15)->subMinutes(32)->getTimestamp(),
-                'protected' => 0,
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'author_id'  => $authorId,
-                'title'      => 'Welcome to the SupportPal Demo',
-                'slug'       => 'welcome-to-the-supportpal-demo',
-                'excerpt'    => 'Our demo installation automatically resets every 2 hours, if you experience problems logging in then please try again later.',
-                'text'       => $text = '<div class="sp-editor-content">
+            'published' => 1,
+            'published_at' => now()->subDays(9)->subHours(15)->subMinutes(32)->getTimestamp(),
+            'protected' => 0,
+            'created_at' => $time,
+            'updated_at' => $time
+        ]);
+
+        $article6 = DB::table('article')->insertGetId([
+            'author_id'  => $authorId,
+            'title'      => 'Welcome to the SupportPal Demo',
+            'slug'       => 'welcome-to-the-supportpal-demo',
+            'excerpt'    => 'Our demo installation automatically resets every 2 hours, if you experience problems logging in then please try again later.',
+            'text'       => $text = '<div class="sp-editor-content">
 <p>Our demo installation automatically resets every 2 hours, if you experience problems logging in then please try again later. Please be aware that other users may be logged in the demo at the same time and may be making changes that could lead to unexpected results.</p>
 <p>&nbsp;</p>
 <p>We recommend our downloadable <a href="https://www.supportpal.com/product/freetrial">free trial</a> as the best way to try out the software.</p>
 </div>',
-                'purified_text' => $text,
-                'plain_text' => 'Our demo installation automatically resets every 2 hours, if you experience problems logging in then please try again later. Please be aware that other users may be logged in the demo at the same time and may be making changes that could lead to unexpected results.
+            'purified_text' => $text,
+            'plain_text' => 'Our demo installation automatically resets every 2 hours, if you experience problems logging in then please try again later. Please be aware that other users may be logged in the demo at the same time and may be making changes that could lead to unexpected results.
 
 We recommend our downloadable <a href="https://www.supportpal.com/product/freetrial">free trial</a> as the best way to try out the software.',
-                'published'  => 1,
-                'published_at' => now()->subDays(10)->subHours(2)->subMinutes(1)->getTimestamp(),
-                'protected'  => 0,
-                'created_at' => $time,
-                'updated_at' => $time
-            ],
-            [
-                'author_id'  => $authorId,
-                'title'      => 'Version 1.2.3',
-                'slug'       => 'version-1-2-3',
-                'excerpt'    => 'We are pleased to announce the stable release of Acme 1.2.3.',
-                'text'       => $text = '<div class="sp-editor-content">
+            'published'  => 1,
+            'published_at' => now()->subDays(10)->subHours(2)->subMinutes(1)->getTimestamp(),
+            'protected'  => 0,
+            'created_at' => $time,
+            'updated_at' => $time
+        ]);
+
+        $article7 = DB::table('article')->insertGetId([
+            'author_id'  => $authorId,
+            'title'      => 'Version 1.2.3',
+            'slug'       => 'version-1-2-3',
+            'excerpt'    => 'We are pleased to announce the stable release of Acme 1.2.3.',
+            'text'       => $text = '<div class="sp-editor-content">
 <p>We are pleased to announce the stable release of Acme 1.2.3. The release contains many improvements and bug fixes, and introduces several new features over the previous release.</p>
 <p>&nbsp;</p>
 <p>Enter new features here when full changelog is available.</p>
 </div>',
-                'purified_text' => $text,
-                'plain_text' => 'We are pleased to announce the stable release of Acme 1.2.3. The release contains many improvements and bug fixes, and introduces several new features over the previous release.
+            'purified_text' => $text,
+            'plain_text' => 'We are pleased to announce the stable release of Acme 1.2.3. The release contains many improvements and bug fixes, and introduces several new features over the previous release.
 
 Enter new features here when full changelog is available.',
-                'published'  => 0,
-                'published_at' => now()->subDays(12)->subHours(2)->subMinutes(47)->getTimestamp(),
-                'protected'  => 0,
-                'created_at' => $time,
-                'updated_at' => $time
-            ]
+            'published'  => 0,
+            'published_at' => now()->subDays(12)->subHours(2)->subMinutes(47)->getTimestamp(),
+            'protected'  => 0,
+            'created_at' => $time,
+            'updated_at' => $time
         ]);
 
         // Associate article with types.
+        $announcements = Type::where('slug', 'announcements')->firstOrFail();
+        $knowledgebase = Type::where('slug', 'knowledgebase')->firstOrFail();
+        $documentation = Type::where('slug', 'documentation')->firstOrFail();
         DB::table('article_type_membership')->insert([
-            [ 'article_id' => 1, 'type_id' => 2 ],
-            [ 'article_id' => 2, 'type_id' => 2 ],
-            [ 'article_id' => 3, 'type_id' => 2 ],
-            [ 'article_id' => 3, 'type_id' => 3 ],
-            [ 'article_id' => 4, 'type_id' => 2 ],
-            [ 'article_id' => 5, 'type_id' => 2 ],
-            [ 'article_id' => 5, 'type_id' => 3 ],
-            [ 'article_id' => 6, 'type_id' => 1 ],
-            [ 'article_id' => 7, 'type_id' => 3 ],
+            [ 'article_id' => $article1, 'type_id' => $knowledgebase->id ],
+            [ 'article_id' => $article2, 'type_id' => $knowledgebase->id ],
+            [ 'article_id' => $article3, 'type_id' => $knowledgebase->id ],
+            [ 'article_id' => $article3, 'type_id' => $documentation->id ],
+            [ 'article_id' => $article4, 'type_id' => $knowledgebase->id ],
+            [ 'article_id' => $article5, 'type_id' => $knowledgebase->id ],
+            [ 'article_id' => $article5, 'type_id' => $documentation->id ],
+            [ 'article_id' => $article6, 'type_id' => $announcements->id ],
+            [ 'article_id' => $article7, 'type_id' => $documentation->id ],
         ]);
 
         // Associate categories.
         DB::table('article_cat_membership')->insert([
-            [ 'article_id' => 1, 'category_id' => 4 ],
-            [ 'article_id' => 1, 'category_id' => 5 ],
-            [ 'article_id' => 2, 'category_id' => 4 ],
-            [ 'article_id' => 3, 'category_id' => 3 ],
-            [ 'article_id' => 3, 'category_id' => 7 ],
-            [ 'article_id' => 4, 'category_id' => 3 ],
-            [ 'article_id' => 5, 'category_id' => 3 ],
-            [ 'article_id' => 5, 'category_id' => 7 ],
-            [ 'article_id' => 6, 'category_id' => 1 ],
-            [ 'article_id' => 6, 'category_id' => 2 ],
-            [ 'article_id' => 7, 'category_id' => 8 ],
+            [ 'article_id' => $article1, 'category_id' => Category::where('slug', 'customisation')->firstOrFail()->id ],
+            [ 'article_id' => $article1, 'category_id' => Category::where('slug', 'api')->firstOrFail()->id ],
+            [ 'article_id' => $article2, 'category_id' => Category::where('slug', 'customisation')->firstOrFail()->id ],
+            [ 'article_id' => $article3, 'category_id' => Category::where('slug', 'getting-started')->firstOrFail()->id ],
+            [ 'article_id' => $article3, 'category_id' => Category::where('slug', 'installation')->firstOrFail()->id ],
+            [ 'article_id' => $article4, 'category_id' => Category::where('slug', 'getting-started')->firstOrFail()->id ],
+            [ 'article_id' => $article5, 'category_id' => Category::where('slug', 'getting-started')->firstOrFail()->id ],
+            [ 'article_id' => $article5, 'category_id' => Category::where('slug', 'installation')->firstOrFail()->id ],
+            [ 'article_id' => $article6, 'category_id' => Category::where('slug', 'press-releases')->firstOrFail()->id ],
+            [ 'article_id' => $article6, 'category_id' => Category::where('slug', 'general')->firstOrFail()->id ],
+            [ 'article_id' => $article7, 'category_id' => Category::where('slug', 'release-notes')->firstOrFail()->id ],
         ]);
 
         // Associate tags.
         DB::table('article_tag_membership')->insert([
-            [ 'article_id' => 2, 'tag_id' => 1 ],
-            [ 'article_id' => 3, 'tag_id' => 1 ],
-            [ 'article_id' => 4, 'tag_id' => 1 ],
-            [ 'article_id' => 1, 'tag_id' => 2 ],
-            [ 'article_id' => 2, 'tag_id' => 2 ],
-            [ 'article_id' => 7, 'tag_id' => 3 ],
+            [ 'article_id' => $article2, 'tag_id' => Tag::where('slug', 'how-to')->firstOrFail()->id ],
+            [ 'article_id' => $article3, 'tag_id' => Tag::where('slug', 'how-to')->firstOrFail()->id ],
+            [ 'article_id' => $article4, 'tag_id' => Tag::where('slug', 'how-to')->firstOrFail()->id ],
+            [ 'article_id' => $article1, 'tag_id' => Tag::where('slug', 'code-samples')->firstOrFail()->id ],
+            [ 'article_id' => $article2, 'tag_id' => Tag::where('slug', 'code-samples')->firstOrFail()->id ],
+            [ 'article_id' => $article7, 'tag_id' => Tag::where('slug', 'release')->firstOrFail()->id ],
         ]);
 
         // Activity Log
         $this->activityLog([
-            [ 'rel_id' => 1, 'rel_name' => 'REST API' ],
-            [ 'rel_id' => 2, 'rel_name' => 'SimpleAuth' ],
-            [ 'rel_id' => 3, 'rel_name' => 'Upgrade an Existing Install' ],
-            [ 'rel_id' => 4, 'rel_name' => 'License Information' ],
-            [ 'rel_id' => 5, 'rel_name' => 'New Installations' ],
-            [ 'rel_id' => 6, 'rel_name' => 'Welcome to the SupportPal Demo' ],
+            [ 'rel_id' => $article1, 'rel_name' => 'REST API' ],
+            [ 'rel_id' => $article2, 'rel_name' => 'SimpleAuth' ],
+            [ 'rel_id' => $article3, 'rel_name' => 'Upgrade an Existing Install' ],
+            [ 'rel_id' => $article4, 'rel_name' => 'License Information' ],
+            [ 'rel_id' => $article5, 'rel_name' => 'New Installations' ],
+            [ 'rel_id' => $article6, 'rel_name' => 'Welcome to the SupportPal Demo' ],
+            [ 'rel_id' => $article7, 'rel_name' => 'Version 1.2.3' ],
         ]);
     }
 
@@ -384,7 +395,7 @@ Enter new features here when full changelog is available.',
         $operator = User::operator()->firstOrFail();
 
         $default = [
-            'type'          => 1,
+            'type'          => \App\Modules\Core\Models\ActivityLog\Type::Operator->value,
             'rel_route'     => 'selfservice.operator.article.edit',
             'section'       => 'selfservice.article',
             'user_id'       => $operator->id,
