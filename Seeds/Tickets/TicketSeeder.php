@@ -12,7 +12,7 @@ use App\Modules\Ticket\Models\SlaPlan;
 use App\Modules\Ticket\Models\Status;
 use App\Modules\Ticket\Models\Tag;
 use App\Modules\Ticket\Models\TicketCustomField;
-use App\Modules\Ticket\Models\TicketCustomFieldValue;
+use App\Modules\Ticket\Models\TicketCustomFieldOption;
 use App\Modules\User\Models\User;
 use Crypt;
 use DB;
@@ -382,7 +382,7 @@ class TicketSeeder extends Seeder
             [
                 'field_id'    => $fieldId = TicketCustomField::where('name', 'Installed Version')->firstOrFail()->id,
                 'ticket_id'   => $ticket1,
-                'value'       => TicketCustomFieldValue::where('field_id', $fieldId)->where('value', '2.0.2')->firstOrFail()->id,
+                'value'       => TicketCustomFieldOption::where('field_id', $fieldId)->where('value', '2.0.2')->firstOrFail()->id,
                 'encrypted'   => 0,
                 'created_at'  => $time,
                 'updated_at'  => $time
