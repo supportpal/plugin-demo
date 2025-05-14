@@ -4,6 +4,7 @@ namespace Addons\Plugins\Demo\Seeds\Tickets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\Core\Models\ConditionGroup;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,7 @@ class FilterSeeder extends Seeder
         $filterId = DB::table('ticket_filter')->insertGetId([
             'name'        => 'All Tickets',
             'all_groups'  => 1,
-            'condition_group_type' => 1,
+            'condition_group_type' => ConditionGroup::ANY,
             'created_at'  => $time,
             'updated_at'  => $time
         ]);
