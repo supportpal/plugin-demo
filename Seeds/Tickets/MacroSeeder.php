@@ -3,6 +3,12 @@
 namespace Addons\Plugins\Demo\Seeds\Tickets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
+use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\Core\Models\Condition;
+use App\Modules\Core\Models\ConditionGroup;
+use App\Modules\Ticket\Models\Action;
+use App\Modules\Ticket\Models\Status;
+use App\Modules\User\Models\User;
 use DB;
 
 class MacroSeeder extends Seeder
@@ -16,33 +22,29 @@ class MacroSeeder extends Seeder
     {
         $time = time();
         
-        DB::table('ticket_macro')->insert([
-            [
-                'name'        => 'Mark as resolved',
-                'description' => 'Closes ticket and sends a final message to the user.',
-                'created_at'  => $time,
-                'updated_at'  => $time
-            ]
+        $macro = DB::table('ticket_macro')->insertGetId([
+            'name'        => 'Mark as resolved',
+            'description' => 'Closes ticket and sends a final message to the user.',
+            'created_at'  => $time,
+            'updated_at'  => $time,
         ]);
 
 
         // Insert condition group
-        DB::table('ticket_macro_condition_group')->insert([
-            [
-                'macro_id'    => 1,
-                'type'        => 0,
-                'created_at'  => $time,
-                'updated_at'  => $time
-            ]
+        $group = DB::table('ticket_macro_condition_group')->insertGetId([
+            'macro_id'    => $macro,
+            'type'        => ConditionGroup::ALL,
+            'created_at'  => $time,
+            'updated_at'  => $time,
         ]);
 
         // Insert condition
         DB::table('ticket_macro_condition')->insert([
             [
-                'group_id'    => 1,
-                'item'        => 13,
-                'operator'    => 1,
-                'value'       => 2,
+                'group_id'    => $group,
+                'item'        => Condition::TICKET_STATUS,
+                'operator'    => Condition::OPERATOR_NOT_EQUALS,
+                'value'       => Status::where('name', 'Closed')->firstOrFail()->id,
                 'created_at'  => $time,
                 'updated_at'  => $time
             ]
@@ -51,16 +53,16 @@ class MacroSeeder extends Seeder
         // Insert actions
         DB::table('ticket_macro_action')->insert([
             [
-                'macro_id'    => 1,
-                'action'      => 9,
-                'value_id'    => 2,
+                'macro_id'    => $macro,
+                'action'      => Action::UPDATE_STATUS,
+                'value_id'    => Status::where('name', 'Closed')->firstOrFail()->id,
                 'value_text'  => null,
                 'created_at'  => $time,
                 'updated_at'  => $time
             ],
             [
-                'macro_id'    => 1,
-                'action'      => 1,
+                'macro_id'    => $macro,
+                'action'      => Action::ADD_REPLY,
                 'value_id'    => 1,
                 'value_text'  => 'Hello,<br><br>I am going to mark this ticket as resolved now, please let us know if you need any further help.',
                 'created_at'  => $time,
@@ -69,15 +71,16 @@ class MacroSeeder extends Seeder
         ]);
 
         // Insert activity log entry
+        $operator = User::operator()->firstOrFail();
         DB::table('activity_log')->insert([
             [
-                'type'          => 1,
+                'type'          => Type::Operator->value,
                 'rel_name'      => 'Mark as resolved',
-                'rel_id'        => 1,
+                'rel_id'        => $macro,
                 'rel_route'     => 'ticket.operator.macro.edit',
                 'section'       => 'ticket.macro',
-                'user_id'       => 1,
-                'user_name'     => 'John Doe',
+                'user_id'       => $operator->id,
+                'user_name'     => $operator->formatted_name,
                 'event_name'    => 'item_created',
                 'ip'            => inet_pton('81.8.12.192'),
                 'created_at'    => $time,
