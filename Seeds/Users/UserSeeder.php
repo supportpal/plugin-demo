@@ -162,10 +162,6 @@ class UserSeeder extends Seeder
         // Associate with user groups.
         DB::table('user_membership')->insert([
             [
-                'user_id' => User::operator()->where('email', 'operator2@demo.com')->firstOrFail()->id,
-                'group_id' => UserGroup::operator()->where('name', 'Support Team')->firstOrFail()->id,
-            ],
-            [
                 'user_id' => User::where('email', 'joe@bloggs.corp')->firstOrFail()->id,
                 'group_id' => UserGroup::user()->where('name', 'VIP')->firstOrFail()->id,
             ],
