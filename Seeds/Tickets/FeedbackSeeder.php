@@ -26,16 +26,14 @@ class FeedbackSeeder extends Seeder
         $time = time();
         
         $form = DB::table('ticket_feedback_form')->insertGetId([
-            [
-                'name'                 => 'Support & billing feedback',
-                'description'          => 'Feedback form for support and billing tickets.',
-                'email_template_id'    => EmailTemplate::USER_FEEDBACK_REQUEST,
-                'time_after_resolved'  => 86400,
-                'expiry_time'          => 604800,
-                'condition_group_type' => ConditionGroup::ALL,
-                'created_at'           => $time,
-                'updated_at'           => $time
-            ]
+            'name'                 => 'Support & billing feedback',
+            'description'          => 'Feedback form for support and billing tickets.',
+            'email_template_id'    => EmailTemplate::USER_FEEDBACK_REQUEST,
+            'time_after_resolved'  => 86400,
+            'expiry_time'          => 604800,
+            'condition_group_type' => ConditionGroup::ALL,
+            'created_at'           => $time,
+            'updated_at'           => $time,
         ]);
 
         // Insert condition group
