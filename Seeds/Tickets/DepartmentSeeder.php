@@ -75,15 +75,15 @@ class DepartmentSeeder extends Seeder
         $brand1 = Brand::where('name', 'LIKE', 'SupportPal')->firstOrFail();
         $brand2 = Brand::where('name', 'LIKE', 'Brand Demo')->firstOrFail();
         DB::table('department_brand_membership')->insert([
-            [ 'department_id' => $department2, 'brand_id' => $brand1 ],
-            [ 'department_id' => $department3, 'brand_id' => $brand1 ],
-            [ 'department_id' => $department4, 'brand_id' => $brand1 ],
+            [ 'department_id' => $department2, 'brand_id' => $brand1->id ],
+            [ 'department_id' => $department3, 'brand_id' => $brand1->id ],
+            [ 'department_id' => $department4, 'brand_id' => $brand1->id ],
             [
                 'department_id' => Department::where('name', 'Support')->firstOrFail()->id,
-                'brand_id' => $brand2
+                'brand_id' => $brand2->id
             ],
-            [ 'department_id' => $department2, 'brand_id' => $brand2 ],
-            [ 'department_id' => $department5, 'brand_id' => $brand2 ],
+            [ 'department_id' => $department2, 'brand_id' => $brand2->id ],
+            [ 'department_id' => $department5, 'brand_id' => $brand2->id ],
         ]);
 
         // Assign operator groups to departments.
