@@ -4,6 +4,7 @@ namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\Core\Models\Brand;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -21,7 +22,7 @@ class OrganisationSeeder extends Seeder
 
         $organisations = [
             [
-                'brand_id'      => 1,
+                'brand_id'      => Brand::where('name', 'SupportPal')->firstOrFail()->id,
                 'name'          => 'ACME Corp.',
                 'country'       => 'GB',
                 'language_code' => 'en',
@@ -30,7 +31,7 @@ class OrganisationSeeder extends Seeder
                 'updated_at'    => $time,
             ],
             [
-                'brand_id'      => 2,
+                'brand_id'      => Brand::where('name', 'Brand Demo')->firstOrFail()->id,
                 'name'          => 'Echo XYZ LLC',
                 'country'       => 'US',
                 'language_code' => 'en',
@@ -46,7 +47,7 @@ class OrganisationSeeder extends Seeder
         foreach ($organisations as $organisation) {
             $organisationId = DB::table('user_organisation')->insertGetId($organisation);
             $activityLogData[] = [
-                'type'          => Type::Operator,
+                'type'          => Type::Operator->value,
                 'rel_name'      => $organisation['name'],
                 'rel_id'        => $organisationId,
                 'rel_route'     => 'user.operator.organisation.edit',

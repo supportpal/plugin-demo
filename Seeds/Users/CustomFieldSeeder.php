@@ -4,6 +4,8 @@ namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\Core\Models\Brand;
+use App\Modules\Core\Models\CustomField;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -21,10 +23,10 @@ class CustomFieldSeeder extends Seeder
         $time = now()->getTimestamp();
 
         $fields = [
-            ['name' => 'Address 1', 'type' => 8, 'order' => 1],
-            ['name' => 'Address 2', 'type' => 8, 'order' => 2],
-            ['name' => 'Postal Code', 'type' => 8, 'order' => 1],
-            ['name' => 'How did you find us?', 'type' => 8, 'order' => 1],
+            ['name' => 'Address 1', 'type' => CustomField::TEXT, 'order' => 1],
+            ['name' => 'Address 2', 'type' => CustomField::TEXT, 'order' => 2],
+            ['name' => 'Postal Code', 'type' => CustomField::TEXT, 'order' => 1],
+            ['name' => 'How did you find us?', 'type' => CustomField::TEXT, 'order' => 1],
         ];
 
         $activityLogData = [];
@@ -43,7 +45,7 @@ class CustomFieldSeeder extends Seeder
 
             $brandMembershipData[] = [
                 'field_id' => $fieldId,
-                'brand_id' => 1,
+                'brand_id' => Brand::where('name', 'SupportPal')->firstOrFail()->id,
             ];
         }
 

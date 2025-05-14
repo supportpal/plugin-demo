@@ -4,6 +4,7 @@ namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
 use App\Modules\Core\Models\ActivityLog\Type;
+use App\Modules\Core\Models\Brand;
 use App\Modules\Ticket\Models\Department;
 use App\Modules\User\Models\Role;
 use App\Modules\User\Models\User;
@@ -70,8 +71,8 @@ class GroupSeeder extends Seeder
                     'department_group_membership' => ['department_id' => Department::firstOrFail()->id],
                     'group_role_membership'       => ['role_id' => Role::where('name', 'Support Operator')->firstOrFail()->id],
                     'brand_operator_group_membership' => [
-                        ['brand_id' => 1],
-                        ['brand_id' => 2],
+                        ['brand_id' => Brand::where('name', 'SupportPal')->firstOrFail()->id],
+                        ['brand_id' => Brand::where('name', 'Brand Demo')->firstOrFail()->id],
                     ],
                 ],
             ],

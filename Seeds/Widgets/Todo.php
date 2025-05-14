@@ -3,6 +3,7 @@
 namespace Addons\Plugins\Demo\Seeds\Widgets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
+use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\DB;
 
 use function now;
@@ -16,7 +17,7 @@ class Todo extends Seeder
     {
         DB::table('operator_todo_widget')->insert([
             [
-                'user_id'       => 1,
+                'user_id'       => User::operator()->firstOrFail()->id,
                 'text'          => 'Make sure to complete new feature request #323',
                 'due'           => now()->addDay()->getTimestamp(),
                 'created_at'    => now()->getTimestamp(),

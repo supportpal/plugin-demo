@@ -3,7 +3,9 @@
 namespace Addons\Plugins\Demo\Seeds\Users;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
+use App\Modules\Core\Models\ActivityLog\Type;
 use App\Modules\User\Models\User;
+use App\Modules\User\Models\UserGroup;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -34,10 +36,16 @@ class OperatorSeeder extends Seeder
             'updated_at'    => $time
         ]);
 
-        User::findOrFail($secondOperatorId)->convertToOperator([], [ 4 ]);
+        User::findOrFail($secondOperatorId)
+            ->convertToOperator(
+                [],
+                [
+                    UserGroup::operator()->where('name', 'Support Team')->firstOrFail()->id
+                ]
+            );
 
         DB::table('activity_log')->insert([
-            'type'          => 1,
+            'type'          => Type::Operator->value,
             'rel_name'      => 'Shaun Davies',
             'rel_id'        => $secondOperatorId,
             'rel_route'     => 'user.operator.operator.edit',
