@@ -25,7 +25,7 @@ class DepartmentEmailSeeder extends Seeder
         DB::table('department_email')->insert([
             [
                 'department_id' => Department::where('name', 'Support')->firstOrFail()->id,
-                'brand_id'      => $brand1->id,
+                'brand_id'      => $brand2->id,
                 'address'       => 'brandsupport@demo.com',
                 'created_at'    => $time,
                 'updated_at'    => $time
