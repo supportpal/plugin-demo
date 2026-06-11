@@ -292,7 +292,7 @@ class TicketSeeder extends Seeder
                 'user_name'   => User::operator()->firstOrFail()->formatted_name,
                 'user_ip_address' => inet_pton('81.8.12.192'),
                 'by'          => 0,
-                'type'        => 1,
+                'type'        => 0,
                 'excerpt'     => 'Hi Jane, No worries I\'ve just reactivated the service and we can give you 5 days',
                 'text'        => $text = 'Hi Jane,<br /><br />No worries I\'ve just reactivated the service and we can give you 5 days to complete payment. I hope this is enough time, but let me know if you run in to any further trouble with it.<br /><br />-----<br />Best Regards,<br /><br />John Doe<br /><strong>Demo</strong>',
                 'purified_text' => $text,
