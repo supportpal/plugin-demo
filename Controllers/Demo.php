@@ -101,11 +101,11 @@ class Demo extends Plugin
     protected function setDemoNotice()
     {
         $notice = <<<END
-<div id="sp-demo-notice" class="sp-fixed sp-bottom-0 sp-start-0 sp-z-10001 sp-w-full sp-px-4 sp-py-2 sp-text-white sp-text-center" style="background: rgba(0, 0, 0, 0.8)">
-    This is the SupportPal <a class="sp-text-white hover:sp-text-white" style="text-decoration: underline" href="https://www.supportpal.com/product/demo" target="_blank">product demo</a>. By
+<div id="sp-demo-notice" class="sp:fixed sp:bottom-0 sp:start-0 sp:z-10001 sp:w-full sp:px-4 sp:py-2 sp:text-white sp:text-center" style="background: rgba(0, 0, 0, 0.8)">
+    This is the SupportPal <a class="sp:text-white hover:sp:text-white" style="text-decoration: underline" href="https://www.supportpal.com/product/demo" target="_blank">product demo</a>. By
     continuing to navigate this website you agree to our 
-    <a class="sp-text-white hover:sp-text-white" style="text-decoration: underline" href="https://www.supportpal.com/company/terms" target="_blank">Terms of Service</a>
-    and <a class="sp-text-white hover:sp-text-white" style="text-decoration: underline" href="https://www.supportpal.com/company/privacy" target="_blank">Privacy Policy</a>.
+    <a class="sp:text-white hover:sp:text-white" style="text-decoration: underline" href="https://www.supportpal.com/company/terms" target="_blank">Terms of Service</a>
+    and <a class="sp:text-white hover:sp:text-white" style="text-decoration: underline" href="https://www.supportpal.com/company/privacy" target="_blank">Privacy Policy</a>.
 </div>
 END;
 
