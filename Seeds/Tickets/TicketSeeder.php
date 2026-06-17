@@ -3,7 +3,11 @@
 namespace Addons\Plugins\Demo\Seeds\Tickets;
 
 use App\Modules\Core\Controllers\Database\Seed\Seeder;
+use App\Modules\Core\Models\ActivityLog\Attribute;
+use App\Modules\Core\Models\ActivityLog\DynamicValue;
+use App\Modules\Core\Models\ActivityLog\RelNameOptions;
 use App\Modules\Core\Models\Brand;
+use App\Modules\Core\Models\FeedbackRating;
 use App\Modules\Ticket\Models\Channel;
 use App\Modules\Ticket\Models\Department;
 use App\Modules\Ticket\Models\DepartmentEmail;
@@ -292,7 +296,7 @@ class TicketSeeder extends Seeder
                 'user_name'   => User::operator()->firstOrFail()->formatted_name,
                 'user_ip_address' => inet_pton('81.8.12.192'),
                 'by'          => 0,
-                'type'        => 1,
+                'type'        => 0,
                 'excerpt'     => 'Hi Jane, No worries I\'ve just reactivated the service and we can give you 5 days',
                 'text'        => $text = 'Hi Jane,<br /><br />No worries I\'ve just reactivated the service and we can give you 5 days to complete payment. I hope this is enough time, but let me know if you run in to any further trouble with it.<br /><br />-----<br />Best Regards,<br /><br />John Doe<br /><strong>Demo</strong>',
                 'purified_text' => $text,
@@ -513,6 +517,158 @@ class TicketSeeder extends Seeder
                 'created_at'    => $time - 2804,
                 'updated_at'    => $time - 2804
             ]
+        ]);
+
+        // Insert ticket events (status changes, tags, locking, feedback) along with their timeline entries
+        $addEventWithTimelineEntry = function (array $data) {
+            $logId = DB::table('activity_log')->insertGetId($data);
+
+            DB::table('ticket_timeline')->insert([
+                'ticket_id'         => $data['rel_id'],
+                'ticket_message_id' => null,
+                'activity_log_id'   => $logId,
+                'created_at'        => $data['created_at'],
+                'updated_at'        => $data['updated_at'],
+            ]);
+        };
+
+        $statusValue = function (string $name) {
+            return DynamicValue::create(
+                new Attribute(Status::where('name', $name)->firstOrFail()->id, Status::class),
+                $name
+            );
+        };
+
+        // Ticket 3 - status changed and tag added with the last operator reply.
+        $addEventWithTimelineEntry([
+            'type'          => 1,
+            'rel_name'      => '7483029',
+            'rel_id'        => $ticket3,
+            'rel_route'     => 'ticket.operator.ticket.show',
+            'section'       => 'ticket.ticket',
+            'user_id'       => User::operator()->firstOrFail()->id,
+            'user_name'     => User::operator()->firstOrFail()->formatted_name,
+            'event_name'    => 'ticket_status_updated',
+            'extra'         => json_encode([
+                'old_value' => $statusValue('Open'),
+                'new_value' => $statusValue('In-Progress'),
+            ]),
+            'ip'            => inet_pton('81.8.12.192'),
+            'created_at'    => $time - 3100,
+            'updated_at'    => $time - 3100
+        ]);
+
+        $addEventWithTimelineEntry([
+            'type'          => 1,
+            'rel_name'      => '7483029',
+            'rel_id'        => $ticket3,
+            'rel_route'     => 'ticket.operator.ticket.show',
+            'section'       => 'ticket.ticket',
+            'user_id'       => User::operator()->firstOrFail()->id,
+            'user_name'     => User::operator()->firstOrFail()->formatted_name,
+            'event_name'    => 'ticket_tag_added_multiple',
+            'extra'         => json_encode([
+                'formatted_items' => Tag::formatCollectionForActivityLog(Tag::where('name', 'Custom Work')->get()),
+            ]),
+            'ip'            => inet_pton('81.8.12.192'),
+            'created_at'    => $time - 3100,
+            'updated_at'    => $time - 3100
+        ]);
+
+        // Ticket 4 - closed and locked after the last user reply, then the user left feedback.
+        $addEventWithTimelineEntry([
+            'type'          => 1,
+            'rel_name'      => 'SALES-03139',
+            'rel_id'        => $ticket4,
+            'rel_route'     => 'ticket.operator.ticket.show',
+            'section'       => 'ticket.ticket',
+            'user_id'       => User::operator()->firstOrFail()->id,
+            'user_name'     => User::operator()->firstOrFail()->formatted_name,
+            'event_name'    => 'ticket_status_updated',
+            'extra'         => json_encode([
+                'old_value' => $statusValue('Open'),
+                'new_value' => $statusValue('Closed'),
+            ]),
+            'ip'            => inet_pton('81.8.12.192'),
+            'created_at'    => $time - 86600,
+            'updated_at'    => $time - 86600
+        ]);
+
+        $addEventWithTimelineEntry([
+            'type'          => 1,
+            'rel_name'      => 'SALES-03139',
+            'rel_id'        => $ticket4,
+            'rel_route'     => 'ticket.operator.ticket.show',
+            'section'       => 'ticket.ticket',
+            'user_id'       => User::operator()->firstOrFail()->id,
+            'user_name'     => User::operator()->firstOrFail()->formatted_name,
+            'event_name'    => 'ticket_locked',
+            'ip'            => inet_pton('81.8.12.192'),
+            'created_at'    => $time - 86600,
+            'updated_at'    => $time - 86600
+        ]);
+
+        $addEventWithTimelineEntry([
+            'type'          => 2,
+            'rel_name'      => 'SALES-03139',
+            'rel_id'        => $ticket4,
+            'rel_route'     => 'ticket.operator.ticket.show',
+            'section'       => 'ticket.ticket',
+            'user_id'       => User::where('email', 'jane.mason@acme.corp')->firstOrFail()->id,
+            'user_name'     => User::where('email', 'jane.mason@acme.corp')->firstOrFail()->formatted_name,
+            'event_name'    => 'ticket_feedback_rating',
+            'extra'         => json_encode([
+                'rel' => [
+                    [
+                        'name'         => FeedbackRating::GOOD->toLanguageVariable(),
+                        'name_options' => (new RelNameOptions)
+                            ->useLocalisation(true)
+                            ->convertToLowercase(true)
+                            ->toArray(),
+                    ],
+                ],
+            ]),
+            'ip'            => inet_pton('81.8.12.192'),
+            'created_at'    => $time - 86400,
+            'updated_at'    => $time - 86400
+        ]);
+
+        // Ticket 5 - status changed and tags added after the last operator reply.
+        $addEventWithTimelineEntry([
+            'type'          => 1,
+            'rel_name'      => '1354619',
+            'rel_id'        => $ticket5,
+            'rel_route'     => 'ticket.operator.ticket.show',
+            'section'       => 'ticket.ticket',
+            'user_id'       => User::operator()->firstOrFail()->id,
+            'user_name'     => User::operator()->firstOrFail()->formatted_name,
+            'event_name'    => 'ticket_status_updated',
+            'extra'         => json_encode([
+                'old_value' => $statusValue('Open'),
+                'new_value' => $statusValue('Awaiting Reply'),
+            ]),
+            'ip'            => inet_pton('81.8.12.192'),
+            'created_at'    => $time - 6795,
+            'updated_at'    => $time - 6795
+        ]);
+
+        $addEventWithTimelineEntry([
+            'type'          => 1,
+            'rel_name'      => '1354619',
+            'rel_id'        => $ticket5,
+            'rel_route'     => 'ticket.operator.ticket.show',
+            'section'       => 'ticket.ticket',
+            'user_id'       => User::operator()->firstOrFail()->id,
+            'user_name'     => User::operator()->firstOrFail()->formatted_name,
+            'event_name'    => 'ticket_tag_added_multiple',
+            'extra'         => json_encode([
+                'formatted_items' => Tag::formatCollectionForActivityLog(
+                    Tag::whereIn('name', ['Feature Request', 'Logged'])->get()
+                ),
+            ]),
+            'ip'            => inet_pton('81.8.12.192'),
+            'created_at'    => $time - 6795,
+            'updated_at'    => $time - 6795
         ]);
     }
 }
