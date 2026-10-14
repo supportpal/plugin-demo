@@ -387,7 +387,6 @@ class TicketSeeder extends Seeder
                 'field_id'    => $fieldId = TicketCustomField::where('name', 'Installed Version')->firstOrFail()->id,
                 'ticket_id'   => $ticket1,
                 'value'       => TicketCustomFieldOption::where('field_id', $fieldId)->where('value', '2.0.2')->firstOrFail()->id,
-                'encrypted'   => 0,
                 'created_at'  => $time,
                 'updated_at'  => $time
             ],
@@ -395,7 +394,6 @@ class TicketSeeder extends Seeder
                 'field_id'    => TicketCustomField::where('name', 'Installation URL')->firstOrFail()->id,
                 'ticket_id'   => $ticket1,
                 'value'       => 'http://mydomain.com/support',
-                'encrypted'   => 0,
                 'created_at'  => $time,
                 'updated_at'  => $time
             ],
@@ -403,7 +401,6 @@ class TicketSeeder extends Seeder
                 'field_id'    => TicketCustomField::where('name', 'FTP Username')->firstOrFail()->id,
                 'ticket_id'   => $ticket1,
                 'value'       => Crypt::encrypt('myusername'),
-                'encrypted'   => 1,
                 'created_at'  => $time,
                 'updated_at'  => $time
             ],
@@ -411,7 +408,6 @@ class TicketSeeder extends Seeder
                 'field_id'    => TicketCustomField::where('name', 'FTP Password')->firstOrFail()->id,
                 'ticket_id'   => $ticket1,
                 'value'       => Crypt::encrypt('mypassword'),
-                'encrypted'   => 1,
                 'created_at'  => $time,
                 'updated_at'  => $time
             ]
